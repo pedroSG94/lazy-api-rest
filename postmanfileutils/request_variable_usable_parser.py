@@ -6,13 +6,13 @@ class RequestUsableParser():
         return "\"url\":" + "\"" + requestString["url"] + "\""
 
     def getHeaders(self, requestString):
-        return "\"headers\":" + "\"" + str(requestString["headerData"]) + "\""
+        return "\"headers\":" + str(requestString["headerData"]).replace("\'", "\"").replace("True", "\"\"").replace("False", "\"\"")
 
     def getMethod(self, requestString):
         return "\"method\":" + "\"" + requestString["method"] + "\""
 
     def getQuerys(self, requestString):
-        return "\"querys\":" + "\"" + str(requestString["queryParams"]) + "\""
+        return "\"querys\":" + str(requestString["queryParams"]).replace("\'", "\"").replace("True", "\"\"").replace("False", "\"\"")
 
     def createRequest(self, requestString):
         return "{\n" + self.getMethod(requestString) + ", \n"  + self.getUrl(requestString) \

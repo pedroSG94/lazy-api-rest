@@ -25,6 +25,9 @@ class CreateGradle:
       +"}\n"
       +"\n"
       +"dependencies {\n"
+      +"    compile 'com.squareup.retrofit2:retrofit:2.3.0'\n"
+      +"    compile 'com.squareup.retrofit2:converter-gson:2.3.0'\n"
+      +"    compile 'com.squareup.okhttp3:logging-interceptor:3.8.1'\n"
       +"}")
         file.close()
         print("gradles created")

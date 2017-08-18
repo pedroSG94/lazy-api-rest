@@ -4,7 +4,7 @@ from modulegenerator.create_gradle import CreateGradle
 from modulegenerator.create_xml import CreateXML
 
 class GenerateModule:
-    def generateModule(moduleName, packageName):
+    def generateModule(self, moduleName, packageName):
         CreateFolders().createAllFolders(moduleName, packageName)
         CreateGradle().createGradle(moduleName)
         createXML = CreateXML()
