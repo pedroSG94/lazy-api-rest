@@ -60,12 +60,16 @@ class GenerateRetrofit2Service(GenerateRetrofit2Base):
             try:
                 stringBodyClassName = destiny.title() + "Body"
                 bodyClassNeeded = False
-                # add body text to request
+                # add bodies
+                cont = 0
                 for body in jsonEncoded["body"]:
                     if body["type"] == "text":
-                        stringRequest += "@Body " + stringBodyClassName + " " + destiny + "body,"
-                        bodyClassNeeded = True
-                        break
+                        if cont < 1:
+                            stringRequest += "@Body " + stringBodyClassName + " " + destiny + "body,"
+                            bodyClassNeeded = True
+                        cont += 1
+                    elif body["type"] == "file":
+                        stringRequest += "@Part MultipartBody.Part " + body["key"] + ","
                 if bodyClassNeeded:
                     self.createBodyClass(bodiesFolder, stringBodyClassName, packageName)
                     file = open(bodiesFolder + os.sep + stringBodyClassName + ".java", "r")
@@ -80,10 +84,6 @@ class GenerateRetrofit2Service(GenerateRetrofit2Base):
                     file.write(stringBody.replace("add_data", stringDataBody))
                     file.flush()
                     file.close()
-                # add body file to request
-                for body in jsonEncoded["body"]:
-                    if body["type"] == "file":
-                        stringRequest += "@Part(\"" + body["key"] + "\") RequestBody " + body["key"] + ","
             except KeyError:
                 pass
             stringRequest += ");\n\n"

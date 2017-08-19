@@ -66,14 +66,20 @@ class GenerateLibraryAPIRest:
         for q in jsonEncoded["querys"]:
             stringParameters += "String " + q["key"] + ","
             stringParametersToService += q["key"] + ","
-        # add body class
+        # add bodies
         try:
+            cont = 0
             for b in jsonEncoded["body"]:
                 if b["type"] == "text":
-                    stringClassBody = self.getMethodName(jsonCode)
-                    stringParameters += stringClassBody.title() + "Body " + stringClassBody + "body,"
-                    stringParametersToService += stringClassBody + "body,"
-                    break
+                    if cont < 1:
+                        stringClassBody = self.getMethodName(jsonCode)
+                        stringParameters += stringClassBody.title() + "Body " + stringClassBody + "body,"
+                        stringParametersToService += stringClassBody + "body,"
+                    cont += 1
+                elif b["type"] == "file":
+                    stringParameters += "File " + b["key"] + ","
+                    stringParametersToService += "getMultiPart(" + b["key"] + ",\"" + b["key"] + "\"),"
+
         except KeyError:
                 pass
         stringParametersToService += ")"

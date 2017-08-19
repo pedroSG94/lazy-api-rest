@@ -1,6 +1,7 @@
 package com.pedro.library;
 
 import com.pedro.library.bodies.*;
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.*;
@@ -38,7 +39,7 @@ public interface Retrofit2Service {
   @POST("addFile")
   @Multipart
   @Headers({})
-  Call<Object> addFile(@Header("Credentials-AccessToken") String Credentials-AccessToken,@Query("path") String path,@Part("image") RequestBody image);
+  Call<Object> addFile(@Header("Credentials-AccessToken") String Credentials-AccessToken,@Query("path") String path,@Part MultipartBody.Part image);
 
   @GET("getPublicMedia")
   @Headers({})
@@ -75,7 +76,7 @@ public interface Retrofit2Service {
   @POST("sendData")
   @Multipart
   @Headers({})
-  Call<Object> sendData(@Header("Credentials-AccessToken") String Credentials-AccessToken,@Query("to") String to,@Body SenddataBody sendDatabody,@Part("image") RequestBody image);
+  Call<Object> sendData(@Header("Credentials-AccessToken") String Credentials-AccessToken,@Query("to") String to,@Part MultipartBody.Part image,@Body SenddataBody sendDatabody);
 
 
 }

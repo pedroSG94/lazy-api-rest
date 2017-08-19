@@ -1,5 +1,10 @@
 package com.pedro.library;
 
+import com.pedro.library.bodies.*;
+import java.io.File;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -10,6 +15,13 @@ public class PedroApiRest {
 
   public PedroApiRest(boolean log) {
     retrofit2Service = new Retrofit2ServiceImp(Constants.BASE_URL, log).getRetrofit().create(Retrofit2Service.class);
+  }
+
+  private MultipartBody.Part getMultiPart(File file, String key) {
+    RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+    MultipartBody.Part body =
+        MultipartBody.Part.createFormData(key, file.getName(), requestFile);
+    return body;
   }
 
   public void deleteFile(String Credentials-AccessToken,String path,final PedroCallback pedrocallback) {
@@ -138,8 +150,8 @@ public class PedroApiRest {
     });
   }
 
-  public void addFile(String Credentials-AccessToken,String path,final PedroCallback pedrocallback) {
-    retrofit2Service.addFile(Credentials-AccessToken,path).enqueue(new Callback<Object>() {
+  public void addFile(String Credentials-AccessToken,String path,File image,final PedroCallback pedrocallback) {
+    retrofit2Service.addFile(Credentials-AccessToken,path,getMultiPart(image,"image")).enqueue(new Callback<Object>() {
       @Override
       public void onResponse(Call<Object> call, Response<Object> response) {
         if (response.isSuccessful()) {
@@ -300,8 +312,8 @@ public class PedroApiRest {
     });
   }
 
-  public void sendData(String Credentials-AccessToken,String to,SenddataBody sendDatabody,final PedroCallback pedrocallback) {
-    retrofit2Service.sendData(Credentials-AccessToken,to,sendDatabody).enqueue(new Callback<Object>() {
+  public void sendData(String Credentials-AccessToken,String to,File image,SenddataBody sendDatabody,final PedroCallback pedrocallback) {
+    retrofit2Service.sendData(Credentials-AccessToken,to,getMultiPart(image,"image"),sendDatabody).enqueue(new Callback<Object>() {
       @Override
       public void onResponse(Call<Object> call, Response<Object> response) {
         if (response.isSuccessful()) {
