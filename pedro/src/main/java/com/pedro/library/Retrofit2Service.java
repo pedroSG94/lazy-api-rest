@@ -1,4 +1,4 @@
-package com.example.library;
+package com.pedro.library;
 
 
 import retrofit2.Call;

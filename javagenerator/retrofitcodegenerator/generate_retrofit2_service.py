@@ -3,6 +3,7 @@ import json
 import re
 from javagenerator.retrofitcodegenerator.generate_retrofit2 import GenerateRetrofit2Base
 
+
 class GenerateRetrofit2Service(GenerateRetrofit2Base):
     def createRetrofit2Service(self, codeFolder, packageName, listRequestJson):
         file = open(codeFolder + os.sep + "Retrofit2Service.java", "w")
