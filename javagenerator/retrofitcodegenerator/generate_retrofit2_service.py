@@ -1,14 +1,12 @@
 import os
 import json
 import re
+from javagenerator.retrofitcodegenerator.generate_retrofit2 import GenerateRetrofit2Base
 
-
-class GenerateRetrofit2Service:
+class GenerateRetrofit2Service(GenerateRetrofit2Base):
     def createRetrofit2Service(self, codeFolder, packageName, listRequestJson):
         file = open(codeFolder + os.sep + "Retrofit2Service.java", "w")
-        file.write("package " + str(packageName) + ";\n"
-                   + "\n"
-                   + "\n"
+        file.write(self.addPackage(packageName)
                    + self.createImports()
                    + "public interface Retrofit2Service {\n"
                    + "\n"
@@ -44,5 +42,5 @@ class GenerateRetrofit2Service:
         stringImports = ""
         stringImports += "import retrofit2.Call;\n"
         stringImports += "import retrofit2.http.*;\n"
-        stringImports += "\n"
+        stringImports += "\n\n"
         return stringImports
