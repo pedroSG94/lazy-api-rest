@@ -12,3 +12,6 @@ def getValuesFolder():
 
 def getCodeFolder():
     return getMainFolder() + os.sep + "java" + os.sep + str(packageName).replace(".", os.sep)
+
+def getBodiesFolder():
+    return getCodeFolder() + os.sep + "bodies"

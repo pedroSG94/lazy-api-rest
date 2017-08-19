@@ -13,8 +13,8 @@ def init():
         print(i)
         listRequestJson.append(i)
     GenerateModule().generateModule(utils.moduleName, utils.packageName,
-                                    utils.getMainFolder(), utils.getCodeFolder(), utils.getValuesFolder())
-    GenerateRetrofit2Service().createRetrofit2Service(utils.getCodeFolder(), utils.packageName, listRequestJson)
+                                    utils.getMainFolder(), utils.getCodeFolder(), utils.getValuesFolder(), utils.getBodiesFolder())
+    GenerateRetrofit2Service().createRetrofit2Service(utils.getCodeFolder(), utils.getBodiesFolder(), utils.packageName, listRequestJson)
     CreateInvariableJavaFiles().copyInvariableJavaFiles(utils.moduleName, utils.packageName, utils.getCodeFolder(), utils.baseUrl)
 
 init()

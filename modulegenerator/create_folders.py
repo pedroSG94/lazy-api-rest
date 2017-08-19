@@ -2,7 +2,7 @@ import os
 
 
 class CreateFolders:
-    def createAllFolders(self, codeFolder, valuesFolder):
+    def createAllFolders(self, codeFolder, valuesFolder, bodiesFolder):
         try:
             os.makedirs(codeFolder)
         except FileExistsError:
@@ -12,3 +12,7 @@ class CreateFolders:
         except FileExistsError:
             print("values folders exists")
         print("folders created")
+        try:
+            os.makedirs(bodiesFolder)
+        except FileExistsError:
+            print("bodies folders exists")

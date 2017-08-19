@@ -4,8 +4,8 @@ from modulegenerator.create_xml import CreateXML
 
 
 class GenerateModule:
-    def generateModule(self, moduleName, packageName, mainFolder, codeFolder, valuesFolder):
-        CreateFolders().createAllFolders(codeFolder, valuesFolder)
+    def generateModule(self, moduleName, packageName, mainFolder, codeFolder, valuesFolder, bodiesFolder):
+        CreateFolders().createAllFolders(codeFolder, valuesFolder, bodiesFolder)
         CreateGradle().createGradle(moduleName)
         createXML = CreateXML()
         createXML.createAndroidManifestXML(mainFolder, packageName)

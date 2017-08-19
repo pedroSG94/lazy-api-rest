@@ -6,11 +6,11 @@ from javagenerator.retrofitcodegenerator.generate_retrofit2 import GenerateRetro
 
 
 class GenerateRetrofit2Service(GenerateRetrofit2Base):
-    def createRetrofit2Service(self, codeFolder, packageName, listRequestJson):
+    def createRetrofit2Service(self, codeFolder, bodiesFolder, packageName, listRequestJson):
         copyfile("javafiles" + os.sep + "Retrofit2Service.java", codeFolder + os.sep + "Retrofit2Service.java")
         file = open(codeFolder + os.sep + "Retrofit2Service.java", "r")
         stringfile = file.read().replace("com.example.library", packageName)
-        stringfile = stringfile.replace("add_data", self.createRequests(listRequestJson))
+        stringfile = stringfile.replace("add_data", self.createRequests(listRequestJson, packageName, bodiesFolder))
         file.flush()
         file.close()
         file = open(codeFolder + os.sep + "Retrofit2Service.java", "w")
@@ -18,7 +18,7 @@ class GenerateRetrofit2Service(GenerateRetrofit2Base):
         file.flush()
         file.close()
 
-    def createRequests(self, listRequestJson):
+    def createRequests(self, listRequestJson, packageName, bodiesFolder):
         stringRequest = ""
         for i in listRequestJson:
             jsonEncoded = json.loads(i.replace("\n", ""))
@@ -58,12 +58,28 @@ class GenerateRetrofit2Service(GenerateRetrofit2Base):
             for query in jsonEncoded["querys"]:
                 stringRequest += "@Query(\"" + str(query["key"]) + "\") String " + str(query["key"]) + ","
             try:
+                stringBodyClassName = destiny.title() + "Body"
+                bodyClassNeeded = False
                 # add body text to request
                 for body in jsonEncoded["body"]:
                     if body["type"] == "text":
-                        stringRequest += "@Body " + destiny.title() + "Body " + destiny + "body,"
-                        # TODO create body class
+                        stringRequest += "@Body " + stringBodyClassName + " " + destiny + "body,"
+                        bodyClassNeeded = True
                         break
+                if bodyClassNeeded:
+                    self.createBodyClass(bodiesFolder, stringBodyClassName, packageName)
+                    file = open(bodiesFolder + os.sep + stringBodyClassName + ".java", "r")
+                    stringBody = file.read()
+                    file.flush()
+                    file.close()
+                    file = open(bodiesFolder + os.sep + stringBodyClassName + ".java", "w")
+                    # add constructor to body
+                    stringDataBody = self.addConstructorToBody(jsonEncoded, stringBodyClassName)
+                    # add attributes with setters and getters to body
+                    stringDataBody += self.addAttributesSettersGettersToBody(jsonEncoded)
+                    file.write(stringBody.replace("add_data", stringDataBody))
+                    file.flush()
+                    file.close()
                 # add body file to request
                 for body in jsonEncoded["body"]:
                     if body["type"] == "file":
@@ -74,6 +90,43 @@ class GenerateRetrofit2Service(GenerateRetrofit2Base):
             # fix last iteration headers with values and querys
             stringRequest = stringRequest.replace(",)", ")")
         return stringRequest
+
+    def createBodyClass(self, bodiesFolder, bodyClassName, packageName):
+        copyfile("javafiles" + os.sep + "Body.java", bodiesFolder + os.sep + bodyClassName + ".java")
+        file = open(bodiesFolder + os.sep + bodyClassName + ".java", "r")
+        stringBody = file.read()
+        stringBody = stringBody.replace("Body", bodyClassName).replace("com.example.library", packageName)
+        file.flush()
+        file.close()
+        file = open(bodiesFolder + os.sep + bodyClassName + ".java", "w")
+        file.write(stringBody)
+        file.flush()
+        file.close()
+
+    def addConstructorToBody(self, jsonEncoded, stringBodyClassName):
+        stringDataBody = "public " + stringBodyClassName + "("
+        for body in jsonEncoded["body"]:
+            if body["type"] == "text":
+                stringDataBody += "String " + body["key"] + ","
+                pass
+        stringDataBody += ") {\n"
+        stringDataBody = stringDataBody.replace(",)", ")")
+        for body in jsonEncoded["body"]:
+            if body["type"] == "text":
+                stringDataBody += "  this." + body["key"] + " = " + body["key"] + ";\n"
+        stringDataBody += "}\n\n"
+        return stringDataBody
+
+    def addAttributesSettersGettersToBody(self, jsonEncoded):
+        stringDataBody = ""
+        for body in jsonEncoded["body"]:
+            if body["type"] == "text":
+                stringDataBody += "private String " + body["key"] + ";\n\n"
+                stringDataBody += "public void set" + str(body["key"]).title() + "(String " + body["key"] + ") {\n" \
+                                  + "  this." + body["key"] + " = " + body["key"] + ";\n}\n\n"
+                stringDataBody += "public String get" + str(body["key"]).title() + "() {\n" \
+                                  + "  return " + body["key"] + ";\n}\n\n"
+        return stringDataBody
 
     def createImports(self):
         stringImports = ""
