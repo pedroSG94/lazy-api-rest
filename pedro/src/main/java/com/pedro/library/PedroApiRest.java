@@ -114,8 +114,8 @@ public class PedroApiRest {
     });
   }
 
-  public void filesList(String Credentials-AccessToken,String perPage,String page,String orderBy,String order,String search,String path,final PedroCallback pedrocallback) {
-    retrofit2Service.filesList(Credentials-AccessToken,perPage,page,orderBy,order,search,path).enqueue(new Callback<Object>() {
+  public void filesList(String Credentials-AccessToken,String Content-Type,String perPage,String page,String orderBy,String order,String search,String path,final PedroCallback pedrocallback) {
+    retrofit2Service.filesList(Credentials-AccessToken,Content-Type,perPage,page,orderBy,order,search,path).enqueue(new Callback<Object>() {
       @Override
       public void onResponse(Call<Object> call, Response<Object> response) {
         if (response.isSuccessful()) {

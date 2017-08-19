@@ -29,7 +29,7 @@ public interface Retrofit2Service {
   Call<Object> getPublicFIle(@Header("Credentials-AccessToken") String Credentials-AccessToken,@Query("key") String key);
 
   @GET("filesList")
-  @Headers({})
+  @Headers({"Content-Type: application/json"})
   Call<Object> filesList(@Header("Credentials-AccessToken") String Credentials-AccessToken,@Query("perPage") String perPage,@Query("page") String page,@Query("orderBy") String orderBy,@Query("order") String order,@Query("search") String search,@Query("path") String path);
 
   @DELETE("deleteAll")
@@ -50,8 +50,8 @@ public interface Retrofit2Service {
   Call<Object> deletePublicKey(@Header("Credentials-AccessToken") String Credentials-AccessToken,@Body DeletepublickeyBody deletePublicKeybody);
 
   @DELETE("deleteAccess")
-  @Headers({})
-  Call<Object> deleteAccess(@Header("invited") String invited);
+  @Headers({"invited: alfonsos"})
+  Call<Object> deleteAccess();
 
   @POST("refreshPublicKey")
   @Headers({})
@@ -66,8 +66,8 @@ public interface Retrofit2Service {
   Call<Object> createPublicKey(@Header("Credentials-AccessToken") String Credentials-AccessToken,@Body CreatepublickeyBody createPublicKeybody);
 
   @POST("newAccess")
-  @Headers({})
-  Call<Object> newAccess(@Header("Credentials-AccessToken") String Credentials-AccessToken,@Header("invited") String invited);
+  @Headers({"invited: alfonsos"})
+  Call<Object> newAccess(@Header("Credentials-AccessToken") String Credentials-AccessToken);
 
   @GET("getFile")
   @Headers({})

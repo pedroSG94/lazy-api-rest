@@ -215,11 +215,17 @@
 		},
 		{
 			"id": "61d21a6b-8d9a-048b-4bf8-09638ad5318f",
-			"headers": "Credentials-AccessToken: {{token}}\n",
+			"headers": "Credentials-AccessToken: {{token}}\nContent-Type: application/json\n",
 			"headerData": [
 				{
 					"key": "Credentials-AccessToken",
 					"value": "{{token}}",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json",
 					"description": "",
 					"enabled": true
 				}
@@ -230,41 +236,47 @@
 					"key": "perPage",
 					"value": "5",
 					"equals": true,
-					"description": ""
+					"description": "",
+					"enabled": true
 				},
 				{
 					"key": "page",
 					"value": "1",
 					"equals": true,
-					"description": ""
+					"description": "",
+					"enabled": true
 				},
 				{
 					"key": "orderBy",
 					"value": "name",
 					"equals": true,
-					"description": ""
+					"description": "",
+					"enabled": true
 				},
 				{
 					"key": "order",
 					"value": "ASC",
 					"equals": true,
-					"description": ""
+					"description": "",
+					"enabled": true
 				},
 				{
 					"key": "search",
 					"value": "",
 					"equals": false,
-					"description": ""
+					"description": "",
+					"enabled": true
 				},
 				{
 					"key": "path",
 					"value": "myDrive\n",
 					"equals": true,
-					"description": ""
+					"description": "",
+					"enabled": true
 				}
 			],
 			"preRequestScript": null,
-			"pathVariables": [],
+			"pathVariables": {},
 			"pathVariableData": [],
 			"method": "GET",
 			"data": null,
@@ -272,13 +284,12 @@
 			"version": 2,
 			"tests": null,
 			"currentHelper": "normal",
-			"helperAttributes": [],
-			"time": 1500297483163,
+			"helperAttributes": {},
+			"time": 1503186903309,
 			"name": "filesList",
 			"description": "",
 			"collectionId": "6d8bc41b-45f3-b56c-5deb-0953544416bd",
-			"responses": [],
-			"collection_id": "6d8bc41b-45f3-b56c-5deb-0953544416bd"
+			"responses": []
 		},
 		{
 			"id": "6238392d-b0ad-8f68-e9cb-7d406b094fc4",

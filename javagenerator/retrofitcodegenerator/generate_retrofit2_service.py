@@ -43,8 +43,8 @@ class GenerateRetrofit2Service(GenerateRetrofit2Base):
             # add headers  without values to requests
             for header in jsonEncoded["headers"]:
                 # header value empty add header in @Headers({})
-                if not str(header["value"]):
-                    stringRequest += "\"" + str(header["key"]) + "\","
+                if not (str(header["value"]).startswith("{{") and str(header["value"]).endswith("}}")):
+                    stringRequest += "\"" + str(header["key"]) + ": " + header["value"] + "\","
             stringRequest += "})\n"
             # fix last iteration of headers
             stringRequest = stringRequest.replace(",}", "}")
@@ -52,7 +52,7 @@ class GenerateRetrofit2Service(GenerateRetrofit2Base):
             # add headers  with values to requests
             for header in jsonEncoded["headers"]:
                 # header not value empty add header to method
-                if str(header["value"]):
+                if str(header["value"]).startswith("{{") and str(header["value"]).endswith("}}"):
                     stringRequest += "@Header(\"" + str(header["key"]) + "\") String " + str(header["key"]) + ","
             # add querys to requests
             for query in jsonEncoded["querys"]:
