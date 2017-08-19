@@ -2,18 +2,18 @@ import os
 import json
 import re
 
+
 class GenerateRetrofit2Service:
-    def createRetrofit2Service(self, moduleName, packageName, listRequestJson):
-        folderRoute = str(moduleName) + os.sep + "src" + os.sep + "main" + os.sep + "java" + os.sep + str(packageName).replace(".", "/")
-        file = open(str(folderRoute) + os.sep + "Retrofit2Service.java", "w")
+    def createRetrofit2Service(self, codeFolder, packageName, listRequestJson):
+        file = open(codeFolder + os.sep + "Retrofit2Service.java", "w")
         file.write("package " + str(packageName) + ";\n"
-    +"\n"
-    +"\n"
-    + self.createImports()
-    +"public interface Retrofit2Service {\n"
-    +"\n"
-    + self.createRequests(listRequestJson)
-    +"}")
+                   + "\n"
+                   + "\n"
+                   + self.createImports()
+                   + "public interface Retrofit2Service {\n"
+                   + "\n"
+                   + self.createRequests(listRequestJson)
+                   + "}")
 
     def createRequests(self, listRequestJson):
         stringRequest = ""
@@ -31,11 +31,11 @@ class GenerateRetrofit2Service:
             stringRequest += "\n"
             stringRequest += "Call<Object> " + destiny + "("
             # add headers to requests
-            for h in jsonEncoded["headers"]:
-                stringRequest += "@Header(\"" + str(h["key"]) + "\") String " + str(h["key"]) + ","
+            for header in jsonEncoded["headers"]:
+                stringRequest += "@Header(\"" + str(header["key"]) + "\") String " + str(header["key"]) + ","
             # add querys to requests
-            for q in jsonEncoded["querys"]:
-                stringRequest += "@Query(\"" + str(q["key"]) + "\") String " + str(q["key"]) + ","
+            for query in jsonEncoded["querys"]:
+                stringRequest += "@Query(\"" + str(query["key"]) + "\") String " + str(query["key"]) + ","
             stringRequest += ");\n\n"
             # delete last , to fix format code
         return stringRequest.replace(",)", ")")

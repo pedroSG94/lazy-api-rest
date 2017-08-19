@@ -2,8 +2,8 @@ import os
 
 
 class CreateGradle:
-    def createGradle(self, folderRoute):
-        file = open(str(folderRoute) + os.sep + "build.gradle", "w")
+    def createGradle(self, moduleName):
+        file = open(moduleName + os.sep + "build.gradle", "w")
         file.write("apply plugin: 'com.android.library'\n"
       +"\n"
       +"android {\n"

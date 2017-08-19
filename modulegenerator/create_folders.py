@@ -2,15 +2,13 @@ import os
 
 
 class CreateFolders:
-    def createAllFolders(self, moduleName, modulePackage):
-        mainFolder = str(moduleName) + os.sep + "src" + os.sep + "main"
-        packageFolders = str(modulePackage).replace(".", os.sep)
+    def createAllFolders(self, codeFolder, valuesFolder):
         try:
-            os.makedirs(mainFolder + os.sep + "java" + os.sep + str(packageFolders))
+            os.makedirs(codeFolder)
         except FileExistsError:
-            pass
+            print("code folders exists")
         try:
-            os.makedirs(mainFolder + os.sep + "res" + os.sep + "values")
+            os.makedirs(valuesFolder)
         except FileExistsError:
-            pass
+            print("values folders exists")
         print("folders created")
