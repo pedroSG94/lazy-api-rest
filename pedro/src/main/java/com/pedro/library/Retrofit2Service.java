@@ -1,5 +1,6 @@
 package com.pedro.library;
 
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.*;
 
@@ -11,11 +12,11 @@ public interface Retrofit2Service {
 
   @POST("shareFiles")
   @Headers({})
-  Call<Object> shareFiles(@Header("Credentials-AccessToken") String Credentials-AccessToken);
+  Call<Object> shareFiles(@Header("Credentials-AccessToken") String Credentials-AccessToken,@Body SharefilesBody shareFilesbody);
 
   @POST("increaseCount")
   @Headers({})
-  Call<Object> increaseCount();
+  Call<Object> increaseCount(@Body IncreasecountBody increaseCountbody);
 
   @GET("getMedia")
   @Headers({})
@@ -34,8 +35,9 @@ public interface Retrofit2Service {
   Call<Object> deleteAll(@Header("Credentials-AccessToken") String Credentials-AccessToken,@Query("path") String path);
 
   @POST("addFile")
+  @Multipart
   @Headers({})
-  Call<Object> addFile(@Header("Credentials-AccessToken") String Credentials-AccessToken,@Query("path") String path);
+  Call<Object> addFile(@Header("Credentials-AccessToken") String Credentials-AccessToken,@Query("path") String path,@Part("image") RequestBody image);
 
   @GET("getPublicMedia")
   @Headers({})
@@ -43,7 +45,7 @@ public interface Retrofit2Service {
 
   @DELETE("deletePublicKey")
   @Headers({})
-  Call<Object> deletePublicKey(@Header("Credentials-AccessToken") String Credentials-AccessToken);
+  Call<Object> deletePublicKey(@Header("Credentials-AccessToken") String Credentials-AccessToken,@Body DeletepublickeyBody deletePublicKeybody);
 
   @DELETE("deleteAccess")
   @Headers({})
@@ -51,15 +53,15 @@ public interface Retrofit2Service {
 
   @POST("refreshPublicKey")
   @Headers({})
-  Call<Object> refreshPublicKey(@Header("Credentials-AccessToken") String Credentials-AccessToken);
+  Call<Object> refreshPublicKey(@Header("Credentials-AccessToken") String Credentials-AccessToken,@Body RefreshpublickeyBody refreshPublicKeybody);
 
   @POST("addDIr")
   @Headers({})
-  Call<Object> addDIr(@Header("Credentials-AccessToken") String Credentials-AccessToken,@Query("path") String path);
+  Call<Object> addDIr(@Header("Credentials-AccessToken") String Credentials-AccessToken,@Query("path") String path,@Body AdddirBody addDIrbody);
 
   @POST("createPublicKey")
   @Headers({})
-  Call<Object> createPublicKey(@Header("Credentials-AccessToken") String Credentials-AccessToken);
+  Call<Object> createPublicKey(@Header("Credentials-AccessToken") String Credentials-AccessToken,@Body CreatepublickeyBody createPublicKeybody);
 
   @POST("newAccess")
   @Headers({})
@@ -70,8 +72,9 @@ public interface Retrofit2Service {
   Call<Object> getFile(@Header("Credentials-AccessToken") String Credentials-AccessToken,@Query("path") String path);
 
   @POST("sendData")
+  @Multipart
   @Headers({})
-  Call<Object> sendData(@Header("Credentials-AccessToken") String Credentials-AccessToken,@Query("to") String to);
+  Call<Object> sendData(@Header("Credentials-AccessToken") String Credentials-AccessToken,@Query("to") String to,@Body SenddataBody sendDatabody,@Part("image") RequestBody image);
 
 
 }

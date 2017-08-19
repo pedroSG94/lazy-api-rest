@@ -31,6 +31,14 @@ class GenerateRetrofit2Service(GenerateRetrofit2Base):
             destiny = destiny.replace("/", "").replace("?", "")
             stringRequest += "  @" + jsonEncoded["method"] + \
                              "(\"" + destiny + "\")\n"
+            # add @Multipart to request if needed
+            try:
+                for body in jsonEncoded["body"]:
+                    if body["type"] == "file":
+                        stringRequest += "  @Multipart\n"
+                        break
+            except KeyError:
+                pass
             stringRequest += "  @Headers({"
             # add headers  without values to requests
             for header in jsonEncoded["headers"]:
@@ -49,7 +57,19 @@ class GenerateRetrofit2Service(GenerateRetrofit2Base):
             # add querys to requests
             for query in jsonEncoded["querys"]:
                 stringRequest += "@Query(\"" + str(query["key"]) + "\") String " + str(query["key"]) + ","
-            # TODO add body to request
+            try:
+                # add body text to request
+                for body in jsonEncoded["body"]:
+                    if body["type"] == "text":
+                        stringRequest += "@Body " + destiny.title() + "Body " + destiny + "body,"
+                        # TODO create body class
+                        break
+                # add body file to request
+                for body in jsonEncoded["body"]:
+                    if body["type"] == "file":
+                        stringRequest += "@Part(\"" + body["key"] + "\") RequestBody " + body["key"] + ","
+            except KeyError:
+                pass
             stringRequest += ");\n\n"
             # fix last iteration headers with values and querys
             stringRequest = stringRequest.replace(",)", ")")
