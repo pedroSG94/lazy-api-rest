@@ -11,7 +11,7 @@ public class Retrofit2ServiceImp {
 
     private Retrofit retrofit;
 
-    public RetrofitServiceImp(String baseUrl, boolean log) {
+    public Retrofit2ServiceImp(String baseUrl, boolean log) {
         retrofit = new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .client(getInterceptor(log))

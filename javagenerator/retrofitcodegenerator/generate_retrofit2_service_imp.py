@@ -24,7 +24,7 @@ class GenerateRetrofit2ServiceImp(GenerateRetrofit2Base):
     def createRetrofitInstace(self):
         return "    private Retrofit retrofit;\n" \
                + "\n"\
-               + "    public RetrofitServiceImp(String baseUrl, boolean log) {\n" \
+               + "    public Retrofit2ServiceImp(String baseUrl, boolean log) {\n" \
                + "        retrofit = new Retrofit.Builder()\n" \
                + "                .baseUrl(baseUrl)\n" \
                + "                .client(getInterceptor(log))\n" \
