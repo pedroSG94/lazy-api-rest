@@ -1,4 +1,4 @@
-package com.pedro.library;
+package com.example.library;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;

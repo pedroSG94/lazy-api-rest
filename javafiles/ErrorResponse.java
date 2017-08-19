@@ -1,6 +1,5 @@
 package com.example.library;
 
-
 public class ErrorResponse {
 
   private int code = -1;

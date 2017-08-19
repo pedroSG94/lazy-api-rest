@@ -3,7 +3,7 @@ from shutil import copyfile
 
 class CreateInvariableJavaFiles:
     def copyInvariableJavaFiles(self, moduleName, packageName, codeFolder, baseUrl):
-        sourceJavaFilesFolder = "javagenerator" + os.sep + "utilsgenerator"
+        sourceJavaFilesFolder = "javafiles"
         copyfile(sourceJavaFilesFolder + os.sep + "ErrorResponse.java", codeFolder + os.sep + "ErrorResponse.java")
         copyfile(sourceJavaFilesFolder + os.sep + "LibraryCallback.java", codeFolder + os.sep + str(moduleName).title().replace(" ", "") + "Callback.java")
         copyfile(sourceJavaFilesFolder + os.sep + "Retrofit2ServiceImp.java", codeFolder + os.sep + "Retrofit2ServiceImp.java")
@@ -16,7 +16,6 @@ class CreateInvariableJavaFiles:
         file1.flush()
         file1.close()
         file1 = open(codeFolder + os.sep + "ErrorResponse.java", "w")
-        print(stringFile1)
         file1.write(stringFile1)
         file1.flush()
         file1.close()

@@ -1,18 +1,22 @@
 import os
 import json
 import re
+from shutil import copyfile
 from javagenerator.retrofitcodegenerator.generate_retrofit2 import GenerateRetrofit2Base
 
 
 class GenerateRetrofit2Service(GenerateRetrofit2Base):
     def createRetrofit2Service(self, codeFolder, packageName, listRequestJson):
+        copyfile("javafiles" + os.sep + "Retrofit2Service.java", codeFolder + os.sep + "Retrofit2Service.java")
+        file = open(codeFolder + os.sep + "Retrofit2Service.java", "r")
+        stringfile = file.read().replace("com.example.library", packageName)
+        stringfile = stringfile.replace("add_data", self.createRequests(listRequestJson))
+        file.flush()
+        file.close()
         file = open(codeFolder + os.sep + "Retrofit2Service.java", "w")
-        file.write(self.addPackage(packageName)
-                   + self.createImports()
-                   + "public interface Retrofit2Service {\n"
-                   + "\n"
-                   + self.createRequests(listRequestJson)
-                   + "}")
+        file.write(stringfile)
+        file.flush()
+        file.close()
 
     def createRequests(self, listRequestJson):
         stringRequest = ""
@@ -25,19 +29,31 @@ class GenerateRetrofit2Service(GenerateRetrofit2Base):
             except AttributeError:
                 destiny = str(url)[str(url).index('/'):]
             destiny = destiny.replace("/", "").replace("?", "")
-            stringRequest += "@" + jsonEncoded["method"] + \
-                             "(\"" + destiny + "\")"
-            stringRequest += "\n"
-            stringRequest += "Call<Object> " + destiny + "("
-            # add headers to requests
+            stringRequest += "  @" + jsonEncoded["method"] + \
+                             "(\"" + destiny + "\")\n"
+            stringRequest += "  @Headers({"
+            # add headers  without values to requests
             for header in jsonEncoded["headers"]:
-                stringRequest += "@Header(\"" + str(header["key"]) + "\") String " + str(header["key"]) + ","
+                # header value empty add header in @Headers({})
+                if not str(header["value"]):
+                    stringRequest += "\"" + str(header["key"]) + "\","
+            stringRequest += "})\n"
+            # fix last iteration of headers
+            stringRequest = stringRequest.replace(",}", "}")
+            stringRequest += "  Call<Object> " + destiny + "("
+            # add headers  with values to requests
+            for header in jsonEncoded["headers"]:
+                # header not value empty add header to method
+                if str(header["value"]):
+                    stringRequest += "@Header(\"" + str(header["key"]) + "\") String " + str(header["key"]) + ","
             # add querys to requests
             for query in jsonEncoded["querys"]:
                 stringRequest += "@Query(\"" + str(query["key"]) + "\") String " + str(query["key"]) + ","
+            # TODO add body to request
             stringRequest += ");\n\n"
-            # delete last , to fix format code
-        return stringRequest.replace(",)", ")")
+            # fix last iteration headers with values and querys
+            stringRequest = stringRequest.replace(",)", ")")
+        return stringRequest
 
     def createImports(self):
         stringImports = ""

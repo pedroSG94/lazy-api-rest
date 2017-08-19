@@ -1,6 +1,5 @@
 package com.pedro.library;
 
-
 public class ErrorResponse {
 
   private int code = -1;
