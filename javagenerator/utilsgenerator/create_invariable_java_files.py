@@ -21,7 +21,7 @@ class CreateInvariableJavaFiles:
         file1.close()
 
         file2 = open(codeFolder + os.sep + str(moduleName).title().replace(" ", "") + "Callback.java", "r")
-        stringFile2 = file2.read().replace("com.example.library", packageName)
+        stringFile2 = file2.read().replace("com.example.library", packageName).replace("Library", str(moduleName).title().replace(" ", ""))
         file2.flush()
         file2.close()
         file2 = open(codeFolder + os.sep + str(moduleName).title().replace(" ", "") + "Callback.java", "w")

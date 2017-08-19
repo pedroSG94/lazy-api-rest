@@ -1,6 +1,6 @@
 package com.pedro.library;
 
-public interface LibraryCallback {
+public interface PedroCallback {
 
   void onSuccess(String response);
 

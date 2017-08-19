@@ -11,7 +11,6 @@ def init():
     utils.packageName = "com.pedro.library"
     utils.baseUrl = "http://pedrourl.com"
     for i in RequestExtractor().getAllRequest("test.json"):
-        print(i)
         listRequestJson.append(i)
     GenerateModule().generateModule(utils.moduleName, utils.packageName,
                                     utils.getMainFolder(), utils.getCodeFolder(), utils.getValuesFolder(), utils.getBodiesFolder())
