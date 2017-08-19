@@ -2,6 +2,7 @@ import os
 
 global moduleName
 global packageName
+global baseUrl
 
 def getMainFolder():
     return str(moduleName) + os.sep + "src" + os.sep + "main"

@@ -8,12 +8,13 @@ def init():
     listRequestJson = []
     utils.moduleName = "pedro"
     utils.packageName = "com.pedro.library"
+    utils.baseUrl = "http://pedrourl.com"
     for i in RequestExtractor().getAllRequest("test.json"):
         print(i)
         listRequestJson.append(i)
     GenerateModule().generateModule(utils.moduleName, utils.packageName,
                                     utils.getMainFolder(), utils.getCodeFolder(), utils.getValuesFolder())
     GenerateRetrofit2Service().createRetrofit2Service(utils.getCodeFolder(), utils.packageName, listRequestJson)
-    # GenerateRetrofit2ServiceImp().createRetrofit2ServiceImp(utils.getCodeFolder(), utils.packageName)
-    CreateInvariableJavaFiles().copyInvariableJavaFiles(utils.moduleName, utils.packageName, utils.getCodeFolder())
+    CreateInvariableJavaFiles().copyInvariableJavaFiles(utils.moduleName, utils.packageName, utils.getCodeFolder(), utils.baseUrl)
+
 init()
