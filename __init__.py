@@ -6,13 +6,12 @@ from javagenerator.apigenerator.generate_library_api_rest import GenerateLibrary
 import utils
 import sys
 
+
 def init():
-    listRequestJson = []
     utils.moduleName = sys.argv[1]
     utils.packageName = sys.argv[2]
     utils.baseUrl = sys.argv[3]
-    for i in RequestExtractor().getAllRequest(sys.argv[4]):
-        listRequestJson.append(i)
+    listRequestJson = RequestExtractor().getAllRequest(sys.argv[4])
     GenerateModule().generateModule(utils.moduleName, utils.packageName,
                                     utils.getMainFolder(), utils.getCodeFolder(), utils.getValuesFolder(), utils.getBodiesFolder())
     GenerateRetrofit2Service().createRetrofit2Service(utils.getCodeFolder(), utils.getBodiesFolder(), utils.packageName, listRequestJson)
