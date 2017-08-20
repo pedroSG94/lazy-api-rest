@@ -1,6 +1,6 @@
 package com.example.library;
 
-import com.pedro.library.bodies.*;
+import com.example.library.bodies.*;
 import java.io.File;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
