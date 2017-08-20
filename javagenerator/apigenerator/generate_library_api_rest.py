@@ -59,7 +59,8 @@ class GenerateLibraryAPIRest:
         jsonEncoded = json.loads(jsonCode.replace("\n", ""))
         # add headers with values
         for h in jsonEncoded["headers"]:
-            if h["value"]:
+
+            if str(h["value"]).startswith("{{") and str(h["value"]).endswith("}}"):
                 stringParameters += "String " + h["key"] + ","
                 stringParametersToService += h["key"] + ","
         # add querys

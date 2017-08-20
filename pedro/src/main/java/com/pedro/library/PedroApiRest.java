@@ -114,8 +114,8 @@ public class PedroApiRest {
     });
   }
 
-  public void filesList(String Credentials-AccessToken,String Content-Type,String perPage,String page,String orderBy,String order,String search,String path,final PedroCallback pedrocallback) {
-    retrofit2Service.filesList(Credentials-AccessToken,Content-Type,perPage,page,orderBy,order,search,path).enqueue(new Callback<Object>() {
+  public void filesList(String Credentials-AccessToken,String perPage,String page,String orderBy,String order,String search,String path,final PedroCallback pedrocallback) {
+    retrofit2Service.filesList(Credentials-AccessToken,perPage,page,orderBy,order,search,path).enqueue(new Callback<Object>() {
       @Override
       public void onResponse(Call<Object> call, Response<Object> response) {
         if (response.isSuccessful()) {
@@ -204,8 +204,8 @@ public class PedroApiRest {
     });
   }
 
-  public void deleteAccess(String invited,final PedroCallback pedrocallback) {
-    retrofit2Service.deleteAccess(invited).enqueue(new Callback<Object>() {
+  public void deleteAccess(final PedroCallback pedrocallback) {
+    retrofit2Service.deleteAccess().enqueue(new Callback<Object>() {
       @Override
       public void onResponse(Call<Object> call, Response<Object> response) {
         if (response.isSuccessful()) {
@@ -276,8 +276,8 @@ public class PedroApiRest {
     });
   }
 
-  public void newAccess(String Credentials-AccessToken,String invited,final PedroCallback pedrocallback) {
-    retrofit2Service.newAccess(Credentials-AccessToken,invited).enqueue(new Callback<Object>() {
+  public void newAccess(String Credentials-AccessToken,final PedroCallback pedrocallback) {
+    retrofit2Service.newAccess(Credentials-AccessToken).enqueue(new Callback<Object>() {
       @Override
       public void onResponse(Call<Object> call, Response<Object> response) {
         if (response.isSuccessful()) {
