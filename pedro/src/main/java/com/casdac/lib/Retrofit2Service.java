@@ -1,6 +1,6 @@
-package com.pedro.library;
+package com.casdac.lib;
 
-import com.pedro.library.bodies.*;
+import com.casdac.lib.bodies.*;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;

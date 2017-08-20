@@ -1,4 +1,4 @@
-package com.pedro.library.bodies;
+package com.casdac.lib.bodies;
 
 
 public class SenddataBody {

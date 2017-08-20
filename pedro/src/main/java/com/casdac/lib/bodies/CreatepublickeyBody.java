@@ -1,9 +1,9 @@
-package com.pedro.library.bodies;
+package com.casdac.lib.bodies;
 
 
-public class RefreshpublickeyBody {
+public class CreatepublickeyBody {
 
-public RefreshpublickeyBody(String idFile,String limitDown) {
+public CreatepublickeyBody(String idFile,String limitDown) {
   this.idFile = idFile;
   this.limitDown = limitDown;
 }

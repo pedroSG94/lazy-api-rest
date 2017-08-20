@@ -1,4 +1,4 @@
-package com.pedro.library;
+package com.casdac.lib;
 
 import com.pedro.library.bodies.*;
 import java.io.File;

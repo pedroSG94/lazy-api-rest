@@ -4,13 +4,14 @@ from javagenerator.retrofitcodegenerator.generate_retrofit2_service import Gener
 from javagenerator.utilsgenerator.create_invariable_java_files import CreateInvariableJavaFiles
 from javagenerator.apigenerator.generate_library_api_rest import GenerateLibraryAPIRest
 import utils
+import sys
 
 def init():
     listRequestJson = []
-    utils.moduleName = "pedro"
-    utils.packageName = "com.pedro.library"
-    utils.baseUrl = "http://pedrourl.com"
-    for i in RequestExtractor().getAllRequest("test.json"):
+    utils.moduleName = sys.argv[1]
+    utils.packageName = sys.argv[2]
+    utils.baseUrl = sys.argv[3]
+    for i in RequestExtractor().getAllRequest(sys.argv[4]):
         listRequestJson.append(i)
     GenerateModule().generateModule(utils.moduleName, utils.packageName,
                                     utils.getMainFolder(), utils.getCodeFolder(), utils.getValuesFolder(), utils.getBodiesFolder())

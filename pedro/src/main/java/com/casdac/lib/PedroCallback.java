@@ -1,4 +1,4 @@
-package com.pedro.library;
+package com.casdac.lib;
 
 public interface PedroCallback {
 
