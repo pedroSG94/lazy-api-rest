@@ -2,91 +2,92 @@ import os
 import json
 import re
 from shutil import copyfile
-import utils
+from utils import Utils
 
 
 class GenerateLibraryAPIRest:
-    def generateLibraryAPIRest(self, moduleName, packageName, codeFolder, listRequestJson):
-        fileDestiny = codeFolder + os.sep + str(moduleName).title() + "ApiRest.java"
-        copyfile("javafiles" + os.sep + "LibraryApiRest.java", fileDestiny)
-        file = open(fileDestiny, "r")
-        stringFile = file.read()
-        stringFile = stringFile.replace("LibraryApiRest", str(moduleName).title() + "ApiRest").replace("com.example.library", packageName)
+    def generate_library_API_rest(self, module_name, package_name, code_folder, list_request_json):
+        file_destiny = code_folder + os.sep + str(module_name).title() + "ApiRest.java"
+        copyfile("files" + os.sep + "java" + os.sep + "LibraryApiRest.java", file_destiny)
+        file = open(file_destiny, "r")
+        string_file = file.read()
+        string_file = string_file.replace("LibraryApiRest", str(module_name).title() + "ApiRest").replace("com.example.library", package_name)
         file.flush()
         file.close()
-        file = open(fileDestiny, "w")
-        stringFile = stringFile.replace("add_data", self.generateApiRestMethods(listRequestJson, moduleName))
-        file.write(stringFile)
+        file = open(file_destiny, "w")
+        string_file = string_file.replace("add_data", self.generate_Api_rest_methods(list_request_json, module_name))
+        file.write(string_file)
         file.flush()
         file.close()
+        print("generate_library_API_rest finished")
 
-    def generateApiRestMethods(self, listRequestJson, moduleName):
-        stringMethods = ""
-        for i in listRequestJson:
-            stringMethods += self.createMethod(i, moduleName)
-        return stringMethods
+    def generate_Api_rest_methods(self, list_request_json, module_name):
+        string_methods = ""
+        for i in list_request_json:
+            string_methods += self.create_method(i, module_name)
+        return string_methods
 
-    def generateCallbackResponseInMethod(self, moduleName):
+    def generate_callback_response_in_method(self, module_name):
         return ".enqueue(new Callback<Object>() {\n"\
       + "      @Override\n"\
       + "      public void onResponse(Call<Object> call, Response<Object> response) {\n"\
       + "        if (response.isSuccessful()) {\n"\
-      + "          " + moduleName + "callback.onSuccess(response.toString());\n"\
+      + "          " + module_name + "callback.onSuccess(response.toString());\n"\
       + "        } else {\n"\
-      + "          " + moduleName + "callback.onError(new ErrorResponse(response.code(), response.message()));\n"\
+      + "          " + module_name + "callback.onError(new ErrorResponse(response.code(), response.message()));\n"\
       + "        }\n"\
       + "      }\n"\
       + "\n"\
       + "      @Override\n"\
       + "      public void onFailure(Call<Object> call, Throwable t) {\n"\
-      + "        " + moduleName + "callback.onError(new ErrorResponse(-1, t.getMessage()));\n"\
+      + "        " + module_name + "callback.onError(new ErrorResponse(-1, t.getMessage()));\n"\
       + "      }\n"\
       + "    });\n"
 
-    def getMethodName(self, jsonCode):
-        jsonEncoded = json.loads(jsonCode.replace("\n", ""))
-        url = jsonEncoded["url"]
-        regularExpresion = '\/(.*)\?'
+    def get_method_name(self, json_code):
+        json_encoded = json.loads(json_code.replace("\n", ""))
+        url = json_encoded["url"]
+        regular_expresion = '\/(.*)\?'
         try:
-            destiny = re.search(regularExpresion, url, re.I | re.U).group(0)
+            destiny = re.search(regular_expresion, url, re.I | re.U).group(0)
         except AttributeError:
             destiny = str(url)[str(url).index('/'):]
         destiny = destiny.replace("/", "").replace("?", "")
         return destiny
 
-    def createMethod(self, jsonCode, moduleName):
-        stringParameters = ""
-        stringParametersToService = "("
-        jsonEncoded = json.loads(jsonCode.replace("\n", ""))
+    def create_method(self, json_code, module_name):
+        string_parameters = ""
+        string_parameters_to_service = "("
+        json_encoded = json.loads(json_code.replace("\n", ""))
         # add headers not final
-        for h in jsonEncoded["headers"]:
+        for h in json_encoded["headers"]:
             if not str(h["description"]) == "final":
-                stringParameters += "String " + utils.reformatVariables(h["key"]) + ","
-                stringParametersToService += h["key"] + ","
+                string_parameters += "String " + Utils.reformat_variables(h["key"]) + ","
+                string_parameters_to_service += h["key"] + ","
         # add querys
-        for q in jsonEncoded["querys"]:
-            stringParameters += "String " + q["key"] + ","
-            stringParametersToService += q["key"] + ","
+        for q in json_encoded["querys"]:
+            string_parameters += "String " + q["key"] + ","
+            string_parameters_to_service += q["key"] + ","
         # add bodies
         try:
             cont = 0
-            for b in jsonEncoded["body"]:
+            for b in json_encoded["body"]:
                 if b["type"] == "text":
                     if cont < 1:
-                        stringClassBody = self.getMethodName(jsonCode)
-                        stringParameters += stringClassBody.title() + "Body " + utils.reformatVariables(stringClassBody + "body") + ","
-                        stringParametersToService += stringClassBody + "body,"
+                        string_class_body = self.get_method_name(json_code)
+                        string_parameters += string_class_body.title() + "Body " + Utils.reformat_variables(string_class_body + "body") + ","
+                        string_parameters_to_service += string_class_body + "body,"
                     cont += 1
                 elif b["type"] == "file":
-                    stringParameters += "File " + utils.reformatVariables(b["key"]) + ","
-                    stringParametersToService += "getMultiPart(" + b["key"] + ",\"" + b["key"] + "\"),"
+                    string_parameters += "File " + Utils.reformat_variables(b["key"]) + ","
+                    string_parameters_to_service += "getMultiPart(" + b["key"] + ",\"" + b["key"] + "\"),"
 
         except KeyError:
                 pass
-        stringParametersToService += ")"
-        stringParametersToService = stringParametersToService.replace(",)", ")")
-        stringMethod = "  public void " + self.getMethodName(jsonCode) + "(" + stringParameters \
-                       + "final " + str(moduleName).title() + "Callback " + utils.reformatVariables(moduleName + "callback") + ") {\n" \
-                       + "    retrofit2Service." + self.getMethodName(jsonCode) + stringParametersToService \
-                       + self.generateCallbackResponseInMethod(moduleName) + "  }\n\n"
-        return stringMethod
+        string_parameters_to_service += ")"
+        string_parameters_to_service = string_parameters_to_service.replace(",)", ")")
+        string_method = "  public void " + self.get_method_name(json_code) + "(" + string_parameters \
+                       + "final " + str(module_name).title() + "Callback " + Utils.reformat_variables(module_name + "callback") + ") {\n" \
+                       + "    retrofit2Service." + self.get_method_name(json_code) + string_parameters_to_service \
+                       + self.generate_callback_response_in_method(module_name) + "  }\n\n"
+        return string_method

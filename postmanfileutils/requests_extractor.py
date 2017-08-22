@@ -3,12 +3,12 @@ from postmanfileutils.request_variable_usable_parser import RequestUsableParser
 
 
 class RequestExtractor:
-    def getAllRequest(self, jsonFilePath):
-        file = open(jsonFilePath, "r")
-        jsonEncoded = json.loads(file.read())
-        requests = jsonEncoded["requests"]
-        requestParsed = []
-        requestUsableParser = RequestUsableParser()
+    def get_all_request(self, json_file_path):
+        file = open(json_file_path, "r")
+        json_encoded = json.loads(file.read())
+        requests = json_encoded["requests"]
+        request_parsed = []
         for i in requests:
-            requestParsed.append(requestUsableParser.createRequest(i))
-        return requestParsed
+            request_parsed.append(RequestUsableParser(i).create_request())
+        print("get_all_request finished")
+        return request_parsed

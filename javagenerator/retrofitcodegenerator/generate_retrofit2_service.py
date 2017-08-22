@@ -2,136 +2,129 @@ import os
 import json
 import re
 from shutil import copyfile
-from javagenerator.retrofitcodegenerator.generate_retrofit2 import GenerateRetrofit2Base
-import utils
+from utils import Utils
 
 
-class GenerateRetrofit2Service(GenerateRetrofit2Base):
-    def createRetrofit2Service(self, codeFolder, bodiesFolder, packageName, listRequestJson):
-        copyfile("javafiles" + os.sep + "Retrofit2Service.java", codeFolder + os.sep + "Retrofit2Service.java")
-        file = open(codeFolder + os.sep + "Retrofit2Service.java", "r")
-        stringfile = file.read().replace("com.example.library", packageName)
-        stringfile = stringfile.replace("add_data", self.createRequests(listRequestJson, packageName, bodiesFolder))
+class GenerateRetrofit2Service:
+    def create_Retrofit2Service(self, code_folder, bodies_folder, package_name, list_request_json):
+        copyfile("files" + os.sep + "java" + os.sep + "Retrofit2Service.java", code_folder + os.sep + "Retrofit2Service.java")
+        file = open(code_folder + os.sep + "Retrofit2Service.java", "r")
+        string_file = file.read().replace("com.example.library", package_name)
+        string_file = string_file.replace("add_data", self.create_requests(list_request_json, package_name, bodies_folder))
         file.flush()
         file.close()
-        file = open(codeFolder + os.sep + "Retrofit2Service.java", "w")
-        file.write(stringfile)
+        file = open(code_folder + os.sep + "Retrofit2Service.java", "w")
+        file.write(string_file)
         file.flush()
         file.close()
+        print("create_Retrofit2Service finished")
 
-    def createRequests(self, listRequestJson, packageName, bodiesFolder):
-        stringRequest = ""
-        for i in listRequestJson:
-            jsonEncoded = json.loads(i.replace("\n", ""))
-            url = jsonEncoded["url"]
-            regularExpresion = '\/(.*)\?'
+    def create_requests(self, list_request_json, package_name, bodies_folder):
+        string_request = ""
+        for i in list_request_json:
+            json_encoded = json.loads(i.replace("\n", ""))
+            url = json_encoded["url"]
+            regular_expresion = '\/(.*)\?'
             try:
-                destiny = re.search(regularExpresion, url, re.I | re.U).group(0)
+                destiny = re.search(regular_expresion, url, re.I | re.U).group(0)
             except AttributeError:
                 destiny = str(url)[str(url).index('/'):]
             destiny = destiny.replace("/", "").replace("?", "")
-            stringRequest += "  @" + jsonEncoded["method"] + \
+            string_request += "  @" + json_encoded["method"] + \
                              "(\"" + destiny + "\")\n"
             # add @Multipart to request if needed
             try:
-                for body in jsonEncoded["body"]:
+                for body in json_encoded["body"]:
                     if body["type"] == "file":
-                        stringRequest += "  @Multipart\n"
+                        string_request += "  @Multipart\n"
                         break
             except KeyError:
                 pass
-            stringRequest += "  @Headers({"
+            string_request += "  @Headers({"
             # add headers without values to requests
-            for header in jsonEncoded["headers"]:
+            for header in json_encoded["headers"]:
                 # add final header in @Headers({})
                 if str(header["description"]) == "final":
-                    stringRequest += "\"" + str(header["key"]) + ": " + header["value"] + "\","
-            stringRequest += "})\n"
+                    string_request += "\"" + str(header["key"]) + ": " + header["value"] + "\","
+            string_request += "})\n"
             # fix last iteration of headers
-            stringRequest = stringRequest.replace(",}", "}")
-            stringRequest += "  Call<Object> " + destiny + "("
+            string_request = string_request.replace(",}", "}")
+            string_request += "  Call<Object> " + destiny + "("
             # add headers  with values to requests
-            for header in jsonEncoded["headers"]:
+            for header in json_encoded["headers"]:
                 # header not final add header to method
                 if not str(header["description"]) == "final":
-                    stringRequest += "@Header(\"" + str(header["key"]) + "\") String " + utils.reformatVariables(str(header["key"])) + ","
+                    string_request += "@Header(\"" + str(header["key"]) + "\") String " + Utils.reformat_variables(str(header["key"])) + ","
             # add querys to requests
-            for query in jsonEncoded["querys"]:
-                stringRequest += "@Query(\"" + str(query["key"]) + "\") String " + utils.reformatVariables(str(query["key"])) + ","
+            for query in json_encoded["querys"]:
+                string_request += "@Query(\"" + str(query["key"]) + "\") String " + Utils.reformat_variables(str(query["key"])) + ","
             try:
-                stringBodyClassName = destiny.title() + "Body"
-                bodyClassNeeded = False
+                string_body_class_name = destiny.title() + "Body"
+                body_class_needed = False
                 # add bodies
                 cont = 0
-                for body in jsonEncoded["body"]:
+                for body in json_encoded["body"]:
                     if body["type"] == "text":
                         if cont < 1:
-                            stringRequest += "@Body " + stringBodyClassName + " " + utils.reformatVariables(destiny + "body") + ","
-                            bodyClassNeeded = True
+                            string_request += "@Body " + string_body_class_name + " " + Utils.reformat_variables(destiny + "body") + ","
+                            body_class_needed = True
                         cont += 1
                     elif body["type"] == "file":
-                        stringRequest += "@Part MultipartBody.Part " + utils.reformatVariables(body["key"]) + ","
-                if bodyClassNeeded:
-                    self.createBodyClass(bodiesFolder, stringBodyClassName, packageName)
-                    file = open(bodiesFolder + os.sep + stringBodyClassName + ".java", "r")
-                    stringBody = file.read()
+                        string_request += "@Part MultipartBody.Part " + Utils.reformat_variables(body["key"]) + ","
+                if body_class_needed:
+                    self.create_body_class(bodies_folder, string_body_class_name, package_name)
+                    file = open(bodies_folder + os.sep + string_body_class_name + ".java", "r")
+                    string_body = file.read()
                     file.flush()
                     file.close()
-                    file = open(bodiesFolder + os.sep + stringBodyClassName + ".java", "w")
+                    file = open(bodies_folder + os.sep + string_body_class_name + ".java", "w")
                     # add constructor to body
-                    stringDataBody = self.addConstructorToBody(jsonEncoded, stringBodyClassName)
+                    string_data_body = self.add_constructor_to_body(json_encoded, string_body_class_name)
                     # add attributes with setters and getters to body
-                    stringDataBody += self.addAttributesSettersGettersToBody(jsonEncoded)
-                    file.write(stringBody.replace("add_data", stringDataBody))
+                    string_data_body += self.add_attributes_setters_getters_to_body(json_encoded)
+                    file.write(string_body.replace("add_data", string_data_body))
                     file.flush()
                     file.close()
             except KeyError:
                 pass
-            stringRequest += ");\n\n"
+            string_request += ");\n\n"
             # fix last iteration headers with values and querys
-            stringRequest = stringRequest.replace(",)", ")")
-        return stringRequest
+            string_request = string_request.replace(",)", ")")
+        return string_request
 
-    def createBodyClass(self, bodiesFolder, bodyClassName, packageName):
-        copyfile("javafiles" + os.sep + "Body.java", bodiesFolder + os.sep + bodyClassName + ".java")
-        file = open(bodiesFolder + os.sep + bodyClassName + ".java", "r")
-        stringBody = file.read()
-        stringBody = stringBody.replace("Body", bodyClassName).replace("com.example.library", packageName)
+    def create_body_class(self, bodies_folder, body_class_name, package_name):
+        copyfile("files" + os.sep + "java" + os.sep + "Body.java", bodies_folder + os.sep + body_class_name + ".java")
+        file = open(bodies_folder + os.sep + body_class_name + ".java", "r")
+        string_body = file.read()
+        string_body = string_body.replace("Body", body_class_name).replace("com.example.library", package_name)
         file.flush()
         file.close()
-        file = open(bodiesFolder + os.sep + bodyClassName + ".java", "w")
-        file.write(stringBody)
+        file = open(bodies_folder + os.sep + body_class_name + ".java", "w")
+        file.write(string_body)
         file.flush()
         file.close()
 
-    def addConstructorToBody(self, jsonEncoded, stringBodyClassName):
-        stringDataBody = "public " + stringBodyClassName + "("
-        for body in jsonEncoded["body"]:
+    def add_constructor_to_body(self, json_encoded, string_body_class_name):
+        string_data_body = "public " + string_body_class_name + "("
+        for body in json_encoded["body"]:
             if body["type"] == "text":
-                stringDataBody += "String " + body["key"] + ","
+                string_data_body += "String " + body["key"] + ","
                 pass
-        stringDataBody += ") {\n"
-        stringDataBody = stringDataBody.replace(",)", ")")
-        for body in jsonEncoded["body"]:
+        string_data_body += ") {\n"
+        string_data_body = string_data_body.replace(",)", ")")
+        for body in json_encoded["body"]:
             if body["type"] == "text":
-                stringDataBody += "  this." + body["key"] + " = " + body["key"] + ";\n"
-        stringDataBody += "}\n\n"
-        return stringDataBody
+                string_data_body += "  this." + body["key"] + " = " + body["key"] + ";\n"
+        string_data_body += "}\n\n"
+        return string_data_body
 
-    def addAttributesSettersGettersToBody(self, jsonEncoded):
-        stringDataBody = ""
-        for body in jsonEncoded["body"]:
+    def add_attributes_setters_getters_to_body(self, json_encoded):
+        string_data_body = ""
+        for body in json_encoded["body"]:
             if body["type"] == "text":
-                stringDataBody += "private String " + body["key"] + ";\n\n"
-                stringDataBody += "public void set" + str(body["key"]).title() + "(String " + body["key"] + ") {\n" \
+                string_data_body += "private String " + body["key"] + ";\n\n"
+                string_data_body += "public void set" + str(body["key"]).title() + "(String " + body["key"] + ") {\n" \
                                   + "  this." + body["key"] + " = " + body["key"] + ";\n}\n\n"
-                stringDataBody += "public String get" + str(body["key"]).title() + "() {\n" \
+                string_data_body += "public String get" + str(body["key"]).title() + "() {\n" \
                                   + "  return " + body["key"] + ";\n}\n\n"
-        return stringDataBody
-
-    def createImports(self):
-        stringImports = ""
-        stringImports += "import retrofit2.Call;\n"
-        stringImports += "import retrofit2.http.*;\n"
-        stringImports += "\n\n"
-        return stringImports
+        return string_data_body

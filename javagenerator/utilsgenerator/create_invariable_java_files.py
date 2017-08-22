@@ -1,48 +1,25 @@
 import os
 from shutil import copyfile
+from utils import Utils
+
 
 class CreateInvariableJavaFiles:
-    def copyInvariableJavaFiles(self, moduleName, packageName, codeFolder, baseUrl):
-        sourceJavaFilesFolder = "javafiles"
-        copyfile(sourceJavaFilesFolder + os.sep + "ErrorResponse.java", codeFolder + os.sep + "ErrorResponse.java")
-        copyfile(sourceJavaFilesFolder + os.sep + "LibraryCallback.java", codeFolder + os.sep + str(moduleName).title().replace(" ", "") + "Callback.java")
-        copyfile(sourceJavaFilesFolder + os.sep + "Retrofit2ServiceImp.java", codeFolder + os.sep + "Retrofit2ServiceImp.java")
-        copyfile(sourceJavaFilesFolder + os.sep + "Constants.java", codeFolder + os.sep + "Constants.java")
-        self.modifyPackage(moduleName, packageName, codeFolder, baseUrl)
+    def copy_invariable_java_files(self, module_name, package_name, code_folder, baseUrl):
+        source_java_files_folder = "files" + os.sep + "java"
+        copyfile(source_java_files_folder + os.sep + "ErrorResponse.java", code_folder + os.sep + "ErrorResponse.java")
+        copyfile(source_java_files_folder + os.sep + "LibraryCallback.java", code_folder + os.sep + str(module_name).title().replace(" ", "") + "Callback.java")
+        copyfile(source_java_files_folder + os.sep + "Retrofit2ServiceImp.java", code_folder + os.sep + "Retrofit2ServiceImp.java")
+        copyfile(source_java_files_folder + os.sep + "Constants.java", code_folder + os.sep + "Constants.java")
+        self.modify_package(module_name, package_name, code_folder, baseUrl)
+        print("copy_invariable_java_files finished")
 
-    def modifyPackage(self, moduleName, packageName, codeFolder, baseUrl):
-        file1 = open(codeFolder + os.sep + "ErrorResponse.java", "r")
-        stringFile1 = file1.read().replace("com.example.library", packageName)
-        file1.flush()
-        file1.close()
-        file1 = open(codeFolder + os.sep + "ErrorResponse.java", "w")
-        file1.write(stringFile1)
-        file1.flush()
-        file1.close()
+    def modify_package(self, module_name, package_name, code_folder, baseUrl):
+        Utils.replace_content_in_file(code_folder + os.sep + "ErrorResponse.java", "com.example.library", package_name)
 
-        file2 = open(codeFolder + os.sep + str(moduleName).title().replace(" ", "") + "Callback.java", "r")
-        stringFile2 = file2.read().replace("com.example.library", packageName).replace("Library", str(moduleName).title().replace(" ", ""))
-        file2.flush()
-        file2.close()
-        file2 = open(codeFolder + os.sep + str(moduleName).title().replace(" ", "") + "Callback.java", "w")
-        file2.write(stringFile2)
-        file2.flush()
-        file2.close()
+        Utils.replace_content_in_file(code_folder + os.sep + str(module_name).title().replace(" ", "") + "Callback.java", "com.example.library", package_name)
+        Utils.replace_content_in_file(code_folder + os.sep + str(module_name).title().replace(" ", "") + "Callback.java", "Library", str(module_name).title().replace(" ", ""))
 
-        file3 = open(codeFolder + os.sep + "Retrofit2ServiceImp.java", "r")
-        stringFile3 = file3.read().replace("com.example.library", packageName)
-        file3.flush()
-        file3.close()
-        file3 = open(codeFolder + os.sep + "Retrofit2ServiceImp.java", "w")
-        file3.write(stringFile3)
-        file3.flush()
-        file3.close()
+        Utils.replace_content_in_file(code_folder + os.sep + "Retrofit2ServiceImp.java", "com.example.library", package_name)
 
-        file4 = open(codeFolder + os.sep + "Constants.java", "r")
-        stringFile4 = file4.read().replace("com.example.library", packageName).replace("http://exampleurl.com", baseUrl)
-        file4.flush()
-        file4.close()
-        file4 = open(codeFolder + os.sep + "Constants.java", "w")
-        file4.write(stringFile4)
-        file4.flush()
-        file4.close()
+        Utils.replace_content_in_file(code_folder + os.sep + "Constants.java", "com.example.library", package_name)
+        Utils.replace_content_in_file(code_folder + os.sep + "Constants.java", "http://exampleurl.com", baseUrl)
