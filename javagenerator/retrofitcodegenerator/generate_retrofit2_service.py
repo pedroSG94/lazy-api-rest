@@ -3,6 +3,7 @@ import json
 import re
 from shutil import copyfile
 from javagenerator.retrofitcodegenerator.generate_retrofit2 import GenerateRetrofit2Base
+import utils
 
 
 class GenerateRetrofit2Service(GenerateRetrofit2Base):
@@ -40,10 +41,10 @@ class GenerateRetrofit2Service(GenerateRetrofit2Base):
             except KeyError:
                 pass
             stringRequest += "  @Headers({"
-            # add headers  without values to requests
+            # add headers without values to requests
             for header in jsonEncoded["headers"]:
-                # header value empty add header in @Headers({})
-                if not (str(header["value"]).startswith("{{") and str(header["value"]).endswith("}}")):
+                # add final header in @Headers({})
+                if str(header["description"]) == "final":
                     stringRequest += "\"" + str(header["key"]) + ": " + header["value"] + "\","
             stringRequest += "})\n"
             # fix last iteration of headers
@@ -51,12 +52,12 @@ class GenerateRetrofit2Service(GenerateRetrofit2Base):
             stringRequest += "  Call<Object> " + destiny + "("
             # add headers  with values to requests
             for header in jsonEncoded["headers"]:
-                # header not value empty add header to method
-                if str(header["value"]).startswith("{{") and str(header["value"]).endswith("}}"):
-                    stringRequest += "@Header(\"" + str(header["key"]) + "\") String " + str(header["key"]) + ","
+                # header not final add header to method
+                if not str(header["description"]) == "final":
+                    stringRequest += "@Header(\"" + str(header["key"]) + "\") String " + utils.reformatVariables(str(header["key"])) + ","
             # add querys to requests
             for query in jsonEncoded["querys"]:
-                stringRequest += "@Query(\"" + str(query["key"]) + "\") String " + str(query["key"]) + ","
+                stringRequest += "@Query(\"" + str(query["key"]) + "\") String " + utils.reformatVariables(str(query["key"])) + ","
             try:
                 stringBodyClassName = destiny.title() + "Body"
                 bodyClassNeeded = False
@@ -65,11 +66,11 @@ class GenerateRetrofit2Service(GenerateRetrofit2Base):
                 for body in jsonEncoded["body"]:
                     if body["type"] == "text":
                         if cont < 1:
-                            stringRequest += "@Body " + stringBodyClassName + " " + destiny + "body,"
+                            stringRequest += "@Body " + stringBodyClassName + " " + utils.reformatVariables(destiny + "body") + ","
                             bodyClassNeeded = True
                         cont += 1
                     elif body["type"] == "file":
-                        stringRequest += "@Part MultipartBody.Part " + body["key"] + ","
+                        stringRequest += "@Part MultipartBody.Part " + utils.reformatVariables(body["key"]) + ","
                 if bodyClassNeeded:
                     self.createBodyClass(bodiesFolder, stringBodyClassName, packageName)
                     file = open(bodiesFolder + os.sep + stringBodyClassName + ".java", "r")

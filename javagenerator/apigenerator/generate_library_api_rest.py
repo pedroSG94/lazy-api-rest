@@ -2,6 +2,7 @@ import os
 import json
 import re
 from shutil import copyfile
+import utils
 
 
 class GenerateLibraryAPIRest:
@@ -57,11 +58,10 @@ class GenerateLibraryAPIRest:
         stringParameters = ""
         stringParametersToService = "("
         jsonEncoded = json.loads(jsonCode.replace("\n", ""))
-        # add headers with values
+        # add headers not final
         for h in jsonEncoded["headers"]:
-
-            if str(h["value"]).startswith("{{") and str(h["value"]).endswith("}}"):
-                stringParameters += "String " + h["key"] + ","
+            if not str(h["description"]) == "final":
+                stringParameters += "String " + utils.reformatVariables(h["key"]) + ","
                 stringParametersToService += h["key"] + ","
         # add querys
         for q in jsonEncoded["querys"]:
@@ -74,11 +74,11 @@ class GenerateLibraryAPIRest:
                 if b["type"] == "text":
                     if cont < 1:
                         stringClassBody = self.getMethodName(jsonCode)
-                        stringParameters += stringClassBody.title() + "Body " + stringClassBody + "body,"
+                        stringParameters += stringClassBody.title() + "Body " + utils.reformatVariables(stringClassBody + "body") + ","
                         stringParametersToService += stringClassBody + "body,"
                     cont += 1
                 elif b["type"] == "file":
-                    stringParameters += "File " + b["key"] + ","
+                    stringParameters += "File " + utils.reformatVariables(b["key"]) + ","
                     stringParametersToService += "getMultiPart(" + b["key"] + ",\"" + b["key"] + "\"),"
 
         except KeyError:
@@ -86,7 +86,7 @@ class GenerateLibraryAPIRest:
         stringParametersToService += ")"
         stringParametersToService = stringParametersToService.replace(",)", ")")
         stringMethod = "  public void " + self.getMethodName(jsonCode) + "(" + stringParameters \
-                       + "final " + str(moduleName).title() + "Callback " + moduleName + "callback) {\n" \
+                       + "final " + str(moduleName).title() + "Callback " + utils.reformatVariables(moduleName + "callback") + ") {\n" \
                        + "    retrofit2Service." + self.getMethodName(jsonCode) + stringParametersToService \
                        + self.generateCallbackResponseInMethod(moduleName) + "  }\n\n"
         return stringMethod
