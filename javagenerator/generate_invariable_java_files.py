@@ -3,7 +3,7 @@ from shutil import copyfile
 from utils import Utils
 
 
-class CreateInvariableJavaFiles:
+class GenerateInvariableJavaFiles:
     def copy_invariable_java_files(self, module_name, package_name, code_folder, baseUrl):
         source_java_files_folder = "files" + os.sep + "java"
         copyfile(source_java_files_folder + os.sep + "ErrorResponse.java", code_folder + os.sep + "ErrorResponse.java")
