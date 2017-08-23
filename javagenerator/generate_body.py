@@ -14,11 +14,11 @@ class GenerateBody:
         file_path = self.body_folder + os.sep + self.class_name + ".java"
         copyfile("files" + os.sep + "java" + os.sep + "Body.java", file_path)
         Utils.replace_content_in_file(file_path, "com.example.library", self.package_name)
-        string_data = self.add_constructor_to_body()
-        string_data += self.add_attributes_setters_getters_to_body()
+        string_data = self.__add_constructor_to_body()
+        string_data += self.__add_attributes_setters_getters_to_body()
         Utils.replace_content_in_file(file_path, "add_data", string_data)
 
-    def add_constructor_to_body(self):
+    def __add_constructor_to_body(self):
         string_data_body = "public " + self.class_name + "("
         for body in self.json_encoded["body"]:
             if body["type"] == "text":
@@ -32,7 +32,7 @@ class GenerateBody:
         string_data_body += "}\n\n"
         return string_data_body
 
-    def add_attributes_setters_getters_to_body(self):
+    def __add_attributes_setters_getters_to_body(self):
         string_data_body = ""
         for body in self.json_encoded["body"]:
             if body["type"] == "text":

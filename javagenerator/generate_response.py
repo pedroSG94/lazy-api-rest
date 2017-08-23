@@ -5,11 +5,11 @@ class GenerateResponse:
         self.package_name = package_name
         self.json_encoded = json_encoded
 
-    def create_response_class(self):
+    def __create_response_class(self):
         pass
 
-    def add_constructor_to_response(self):
+    def __add_constructor_to_response(self):
         pass
 
-    def add_attributes_setters_getters_to_body(self):
+    def __add_attributes_setters_getters_to_body(self):
         pass

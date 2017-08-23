@@ -11,7 +11,7 @@ class GenerateRetrofit2Service:
         copyfile("files" + os.sep + "java" + os.sep + "Retrofit2Service.java", code_folder + os.sep + "Retrofit2Service.java")
         file = open(code_folder + os.sep + "Retrofit2Service.java", "r")
         string_file = file.read().replace("com.example.library", package_name)
-        string_file = string_file.replace("add_data", self.create_requests(list_request_json, package_name, bodies_folder))
+        string_file = string_file.replace("add_data", self.__create_requests(list_request_json, package_name, bodies_folder))
         file.flush()
         file.close()
         file = open(code_folder + os.sep + "Retrofit2Service.java", "w")
@@ -20,7 +20,7 @@ class GenerateRetrofit2Service:
         file.close()
         print("create_Retrofit2Service finished")
 
-    def create_requests(self, list_request_json, package_name, bodies_folder):
+    def __create_requests(self, list_request_json, package_name, bodies_folder):
         string_request = ""
         for i in list_request_json:
             json_encoded = json.loads(i.replace("\n", ""))

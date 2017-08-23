@@ -16,7 +16,7 @@ def init():
                                      utility.get_main_folder(), utility.get_code_folder(), utility.get_values_folder(), utility.get_bodies_folder(), utility.get_module_folder())
     GenerateRetrofit2Service().create_Retrofit2Service(utility.get_code_folder(), utility.get_bodies_folder(), utility.package_name, list_request_json)
     GenerateInvariableJavaFiles().copy_invariable_java_files(utility.module_name, utility.package_name, utility.get_code_folder(), base_url)
-    GenerateLibraryAPIRest().generate_library_API_rest(utility.module_name, utility.package_name, utility.get_code_folder(), list_request_json)
+    GenerateLibraryAPIRest().generate_library_api_rest(utility.module_name, utility.package_name, utility.get_code_folder(), list_request_json)
     print("script finished")
 
 init()
