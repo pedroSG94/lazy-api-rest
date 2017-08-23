@@ -4,11 +4,11 @@ from utils import Utils
 
 
 class GenerateModule:
-    def generate_module(self, module_name, package_name, mainFolder, code_folder, valuesFolder, bodies_folder, moduleFolder):
-        self.create_all_folders(code_folder, valuesFolder, bodies_folder)
-        self.create_gradle(moduleFolder)
-        self.create_android_manifest_xml(mainFolder, package_name)
-        self.create_strings_xml(valuesFolder, module_name)
+    def generate_module(self, module_name, package_name, main_folder, code_folder, values_folder, bodies_folder, module_folder):
+        self.create_all_folders(code_folder, values_folder, bodies_folder)
+        self.create_gradle(module_folder)
+        self.create_android_manifest_xml(main_folder, package_name)
+        self.create_strings_xml(values_folder, module_name)
         print("generate_module finished")
 
     def create_all_folders(self, code_folder, values_folder, bodies_folder):
