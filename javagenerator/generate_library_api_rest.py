@@ -11,7 +11,8 @@ class GenerateLibraryAPIRest:
         copyfile("files" + os.sep + "java" + os.sep + "LibraryApiRest.java", file_destiny)
         file = open(file_destiny, "r")
         string_file = file.read()
-        string_file = string_file.replace("LibraryApiRest", str(module_name).title() + "ApiRest").replace("com.example.library", package_name)
+        string_file = string_file.replace("LibraryApiRest", str(module_name).title() + "ApiRest").replace(
+            "com.example.library", package_name)
         file.flush()
         file.close()
         file = open(file_destiny, "w")
@@ -28,21 +29,21 @@ class GenerateLibraryAPIRest:
         return string_methods
 
     def __generate_callback_response_in_method(self, module_name):
-        return ".enqueue(new Callback<Object>() {\n"\
-      + "      @Override\n"\
-      + "      public void onResponse(Call<Object> call, Response<Object> response) {\n"\
-      + "        if (response.isSuccessful()) {\n"\
-      + "          " + module_name + "callback.onSuccess(response.toString());\n"\
-      + "        } else {\n"\
-      + "          " + module_name + "callback.onError(new ErrorResponse(response.code(), response.message()));\n"\
-      + "        }\n"\
-      + "      }\n"\
-      + "\n"\
-      + "      @Override\n"\
-      + "      public void onFailure(Call<Object> call, Throwable t) {\n"\
-      + "        " + module_name + "callback.onError(new ErrorResponse(-1, t.getMessage()));\n"\
-      + "      }\n"\
-      + "    });\n"
+        return ".enqueue(new Callback<Object>() {\n" \
+               + "      @Override\n" \
+               + "      public void onResponse(Call<Object> call, Response<Object> response) {\n" \
+               + "        if (response.isSuccessful()) {\n" \
+               + "          " + module_name + "callback.onSuccess(response.toString());\n" \
+               + "        } else {\n" \
+               + "          " + module_name + "callback.onError(new ErrorResponse(response.code(), response.message()));\n" \
+               + "        }\n" \
+               + "      }\n" \
+               + "\n" \
+               + "      @Override\n" \
+               + "      public void onFailure(Call<Object> call, Throwable t) {\n" \
+               + "        " + module_name + "callback.onError(new ErrorResponse(-1, t.getMessage()));\n" \
+               + "      }\n" \
+               + "    });\n"
 
     def __get_method_name(self, json_code):
         json_encoded = json.loads(json_code.replace("\n", ""))
@@ -75,7 +76,8 @@ class GenerateLibraryAPIRest:
                 if b["type"] == "text":
                     if cont < 1:
                         string_class_body = self.__get_method_name(json_code)
-                        string_parameters += string_class_body.title() + "Body " + Utils.reformat_variables(string_class_body + "body") + ","
+                        string_parameters += string_class_body.title() + "Body " + Utils.reformat_variables(
+                            string_class_body + "body") + ","
                         string_parameters_to_service += string_class_body + "body,"
                     cont += 1
                 elif b["type"] == "file":
@@ -83,11 +85,12 @@ class GenerateLibraryAPIRest:
                     string_parameters_to_service += "getMultiPart(" + b["key"] + ",\"" + b["key"] + "\"),"
 
         except KeyError:
-                pass
+            pass
         string_parameters_to_service += ")"
         string_parameters_to_service = string_parameters_to_service.replace(",)", ")")
         string_method = "  public void " + self.__get_method_name(json_code) + "(" + string_parameters \
-                       + "final " + str(module_name).title() + "Callback " + Utils.reformat_variables(module_name + "callback") + ") {\n" \
-                       + "    retrofit2Service." + self.__get_method_name(json_code) + string_parameters_to_service \
-                       + self.__generate_callback_response_in_method(module_name) + "  }\n\n"
+                        + "final " + str(module_name).title() + "Callback " + Utils.reformat_variables(
+            module_name + "callback") + ") {\n" \
+                        + "    retrofit2Service." + self.__get_method_name(json_code) + string_parameters_to_service \
+                        + self.__generate_callback_response_in_method(module_name) + "  }\n\n"
         return string_method

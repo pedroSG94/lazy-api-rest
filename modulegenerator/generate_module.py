@@ -4,7 +4,8 @@ from utils import Utils
 
 
 class GenerateModule:
-    def generate_module(self, module_name, package_name, main_folder, code_folder, values_folder, bodies_folder, module_folder):
+    def generate_module(self, module_name, package_name, main_folder, code_folder, values_folder, bodies_folder,
+                        module_folder):
         self.__create_all_folders(code_folder, values_folder, bodies_folder)
         self.__create_gradle(module_folder)
         self.__create_android_manifest_xml(main_folder, package_name)

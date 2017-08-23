@@ -38,7 +38,7 @@ class GenerateBody:
             if body["type"] == "text":
                 string_data_body += "private String " + body["key"] + ";\n\n"
                 string_data_body += "public void set" + str(body["key"]).title() + "(String " + body["key"] + ") {\n" \
-                                  + "  this." + body["key"] + " = " + body["key"] + ";\n}\n\n"
+                                    + "  this." + body["key"] + " = " + body["key"] + ";\n}\n\n"
                 string_data_body += "public String get" + str(body["key"]).title() + "() {\n" \
-                                  + "  return " + body["key"] + ";\n}\n\n"
+                                    + "  return " + body["key"] + ";\n}\n\n"
         return string_data_body

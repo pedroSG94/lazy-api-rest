@@ -8,10 +8,12 @@ from javagenerator.generate_body import GenerateBody
 
 class GenerateRetrofit2Service:
     def create_Retrofit2Service(self, code_folder, bodies_folder, package_name, list_request_json):
-        copyfile("files" + os.sep + "java" + os.sep + "Retrofit2Service.java", code_folder + os.sep + "Retrofit2Service.java")
+        copyfile("files" + os.sep + "java" + os.sep + "Retrofit2Service.java",
+                 code_folder + os.sep + "Retrofit2Service.java")
         file = open(code_folder + os.sep + "Retrofit2Service.java", "r")
         string_file = file.read().replace("com.example.library", package_name)
-        string_file = string_file.replace("add_data", self.__create_requests(list_request_json, package_name, bodies_folder))
+        string_file = string_file.replace("add_data",
+                                          self.__create_requests(list_request_json, package_name, bodies_folder))
         file.flush()
         file.close()
         file = open(code_folder + os.sep + "Retrofit2Service.java", "w")
@@ -32,7 +34,7 @@ class GenerateRetrofit2Service:
                 destiny = str(url)[str(url).index('/'):]
             destiny = destiny.replace("/", "").replace("?", "")
             string_request += "  @" + json_encoded["method"] + \
-                             "(\"" + destiny + "\")\n"
+                              "(\"" + destiny + "\")\n"
             # add @Multipart to request if needed
             try:
                 for body in json_encoded["body"]:
@@ -55,10 +57,12 @@ class GenerateRetrofit2Service:
             for header in json_encoded["headers"]:
                 # header not final add header to method
                 if not str(header["description"]) == "final":
-                    string_request += "@Header(\"" + str(header["key"]) + "\") String " + Utils.reformat_variables(str(header["key"])) + ","
+                    string_request += "@Header(\"" + str(header["key"]) + "\") String " + Utils.reformat_variables(
+                        str(header["key"])) + ","
             # add querys to requests
             for query in json_encoded["querys"]:
-                string_request += "@Query(\"" + str(query["key"]) + "\") String " + Utils.reformat_variables(str(query["key"])) + ","
+                string_request += "@Query(\"" + str(query["key"]) + "\") String " + Utils.reformat_variables(
+                    str(query["key"])) + ","
             try:
                 string_body_class_name = destiny.title() + "Body"
                 body_class_needed = False
@@ -67,7 +71,8 @@ class GenerateRetrofit2Service:
                 for body in json_encoded["body"]:
                     if body["type"] == "text":
                         if cont < 1:
-                            string_request += "@Body " + string_body_class_name + " " + Utils.reformat_variables(destiny + "body") + ","
+                            string_request += "@Body " + string_body_class_name + " " + Utils.reformat_variables(
+                                destiny + "body") + ","
                             body_class_needed = True
                         cont += 1
                     elif body["type"] == "file":

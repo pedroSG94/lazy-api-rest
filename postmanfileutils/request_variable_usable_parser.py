@@ -10,16 +10,21 @@ class RequestUsableParser:
         return "\"url\":" + "\"" + self.request_string["url"] + "\""
 
     def get_headers(self):
-        return "\"headers\":" + str(self.request_string["headerData"]).replace("\'", "\"").replace("True", "\"\"").replace("False", "\"\"")
+        return "\"headers\":" + str(self.request_string["headerData"]).replace("\'", "\"").replace("True",
+                                                                                                   "\"\"").replace(
+            "False", "\"\"")
 
     def get_method(self):
         return "\"method\":" + "\"" + self.request_string["method"] + "\""
 
     def get_querys(self):
-        return "\"querys\":" + str(self.request_string["queryParams"]).replace("\'", "\"").replace("True", "\"\"").replace("False", "\"\"")
+        return "\"querys\":" + str(self.request_string["queryParams"]).replace("\'", "\"").replace("True",
+                                                                                                   "\"\"").replace(
+            "False", "\"\"")
 
     def get_body(self):
-        string_body = str(self.request_string["data"]).replace("\'", "\"").replace("True", "\"\"").replace("False", "\"\"")
+        string_body = str(self.request_string["data"]).replace("\'", "\"").replace("True", "\"\"").replace("False",
+                                                                                                           "\"\"")
         if string_body == "None":
             return ""
         else:
@@ -27,5 +32,5 @@ class RequestUsableParser:
 
     def create_request(self):
         return "{\n" + self.get_method() + ", \n" + self.get_url() \
-                               + ", \n" + self.get_headers() + ", \n" + self.get_querys() + \
+               + ", \n" + self.get_headers() + ", \n" + self.get_querys() + \
                self.get_body() + "\n}"
