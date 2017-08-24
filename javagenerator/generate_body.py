@@ -14,12 +14,13 @@ class GenerateBody:
         file_path = self.body_folder + os.sep + self.class_name + ".java"
         copyfile("files" + os.sep + "java" + os.sep + "Body.java", file_path)
         Utils.replace_content_in_file(file_path, "com.example.library", self.package_name)
+        Utils.replace_content_in_file(file_path, "Body", self.class_name)
         string_data = self.__add_constructor_to_body()
         string_data += self.__add_attributes_setters_getters_to_body()
         Utils.replace_content_in_file(file_path, "add_data", string_data)
 
     def __add_constructor_to_body(self):
-        string_data_body = "public " + self.class_name + "("
+        string_data_body = "  public " + self.class_name + "("
         for body in self.json_encoded["body"]:
             if body["type"] == "text":
                 string_data_body += "String " + body["key"] + ","
@@ -28,17 +29,17 @@ class GenerateBody:
         string_data_body = string_data_body.replace(",)", ")")
         for body in self.json_encoded["body"]:
             if body["type"] == "text":
-                string_data_body += "  this." + body["key"] + " = " + body["key"] + ";\n"
-        string_data_body += "}\n\n"
+                string_data_body += "    this." + body["key"] + " = " + body["key"] + ";\n"
+        string_data_body += "  }\n\n"
         return string_data_body
 
     def __add_attributes_setters_getters_to_body(self):
         string_data_body = ""
         for body in self.json_encoded["body"]:
             if body["type"] == "text":
-                string_data_body += "private String " + body["key"] + ";\n\n"
-                string_data_body += "public void set" + str(body["key"]).title() + "(String " + body["key"] + ") {\n" \
-                                    + "  this." + body["key"] + " = " + body["key"] + ";\n}\n\n"
-                string_data_body += "public String get" + str(body["key"]).title() + "() {\n" \
-                                    + "  return " + body["key"] + ";\n}\n\n"
+                string_data_body += "  private String " + body["key"] + ";\n\n"
+                string_data_body += "  public void set" + str(body["key"]).title() + "(String " + body["key"] + ") {\n" \
+                                    + "    this." + body["key"] + " = " + body["key"] + ";\n}\n\n"
+                string_data_body += "  public String get" + str(body["key"]).title() + "() {\n" \
+                                    + "    return " + body["key"] + ";\n}\n\n"
         return string_data_body

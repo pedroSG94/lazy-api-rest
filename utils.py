@@ -21,6 +21,12 @@ class Utils:
     def get_bodies_folder(self):
         return self.get_code_folder() + os.sep + "bodies"
 
+    def get_responses_folder(self):
+        return self.get_code_folder() + os.sep + "responses"
+
+    def get_callbacks_folder(self):
+        return self.get_code_folder() + os.sep + "callbacks"
+
     @staticmethod
     def reformat_variables(variable_name):
         valid_variable = variable_name

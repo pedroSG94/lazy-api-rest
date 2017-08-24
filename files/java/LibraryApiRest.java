@@ -1,6 +1,8 @@
 package com.example.library;
 
 import com.example.library.bodies.*;
+import com.example.library.callbacks.*;
+import com.example.library.responses.*;
 import java.io.File;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;

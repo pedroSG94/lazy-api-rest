@@ -33,15 +33,15 @@ class GenerateLibraryAPIRest:
                + "      @Override\n" \
                + "      public void onResponse(Call<Object> call, Response<Object> response) {\n" \
                + "        if (response.isSuccessful()) {\n" \
-               + "          " + module_name + "callback.onSuccess(response.toString());\n" \
+               + "          callback.onSuccess(response.body());\n" \
                + "        } else {\n" \
-               + "          " + module_name + "callback.onError(new ErrorResponse(response.code(), response.message()));\n" \
+               + "          callback.onError(new ErrorResponse(response.code(), response.message()));\n" \
                + "        }\n" \
                + "      }\n" \
                + "\n" \
                + "      @Override\n" \
                + "      public void onFailure(Call<Object> call, Throwable t) {\n" \
-               + "        " + module_name + "callback.onError(new ErrorResponse(-1, t.getMessage()));\n" \
+               + "        callback.onError(new ErrorResponse(-1, t.getMessage()));\n" \
                + "      }\n" \
                + "    });\n"
 
@@ -64,11 +64,11 @@ class GenerateLibraryAPIRest:
         for h in json_encoded["headers"]:
             if not str(h["description"]) == "final":
                 string_parameters += "String " + Utils.reformat_variables(h["key"]) + ","
-                string_parameters_to_service += h["key"] + ","
+                string_parameters_to_service += Utils.reformat_variables(h["key"]) + ","
         # add querys
         for q in json_encoded["querys"]:
-            string_parameters += "String " + q["key"] + ","
-            string_parameters_to_service += q["key"] + ","
+            string_parameters += "String " + Utils.reformat_variables(q["key"]) + ","
+            string_parameters_to_service += Utils.reformat_variables(q["key"]) + ","
         # add bodies
         try:
             cont = 0
@@ -82,15 +82,14 @@ class GenerateLibraryAPIRest:
                     cont += 1
                 elif b["type"] == "file":
                     string_parameters += "File " + Utils.reformat_variables(b["key"]) + ","
-                    string_parameters_to_service += "getMultiPart(" + b["key"] + ",\"" + b["key"] + "\"),"
+                    string_parameters_to_service += "getMultiPart(" + Utils.reformat_variables(b["key"]) + ",\"" + b["key"] + "\"),"
 
         except KeyError:
             pass
         string_parameters_to_service += ")"
         string_parameters_to_service = string_parameters_to_service.replace(",)", ")")
         string_method = "  public void " + self.__get_method_name(json_code) + "(" + string_parameters \
-                        + "final " + str(module_name).title() + "Callback " + Utils.reformat_variables(
-            module_name + "callback") + ") {\n" \
+                        + "final DefaultCallback callback) {\n" \
                         + "    retrofit2Service." + self.__get_method_name(json_code) + string_parameters_to_service \
                         + self.__generate_callback_response_in_method(module_name) + "  }\n\n"
         return string_method

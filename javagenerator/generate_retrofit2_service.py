@@ -4,16 +4,20 @@ import re
 from shutil import copyfile
 from utils import Utils
 from javagenerator.generate_body import GenerateBody
+from javagenerator.generate_response import GenerateResponse
+from javagenerator.generate_callback import GenerateCallback
 
 
 class GenerateRetrofit2Service:
-    def create_Retrofit2Service(self, code_folder, bodies_folder, package_name, list_request_json):
+    def create_Retrofit2Service(self, code_folder, bodies_folder, package_name, list_request_json, dict_response_json,
+                                response_folder, callback_folder):
         copyfile("files" + os.sep + "java" + os.sep + "Retrofit2Service.java",
                  code_folder + os.sep + "Retrofit2Service.java")
         file = open(code_folder + os.sep + "Retrofit2Service.java", "r")
         string_file = file.read().replace("com.example.library", package_name)
         string_file = string_file.replace("add_data",
-                                          self.__create_requests(list_request_json, package_name, bodies_folder))
+                                          self.__create_requests(list_request_json, package_name, bodies_folder,
+                                                                 dict_response_json, response_folder, callback_folder))
         file.flush()
         file.close()
         file = open(code_folder + os.sep + "Retrofit2Service.java", "w")
@@ -22,7 +26,7 @@ class GenerateRetrofit2Service:
         file.close()
         print("create_Retrofit2Service finished")
 
-    def __create_requests(self, list_request_json, package_name, bodies_folder):
+    def __create_requests(self, list_request_json, package_name, bodies_folder, dict_response_json, response_folder, callback_folder):
         string_request = ""
         for i in list_request_json:
             json_encoded = json.loads(i.replace("\n", ""))
@@ -52,7 +56,17 @@ class GenerateRetrofit2Service:
             string_request += "})\n"
             # fix last iteration of headers
             string_request = string_request.replace(",}", "}")
-            string_request += "  Call<Object> " + destiny + "("
+            response_class_name = destiny.title() + "Response"
+            callback_class_name = destiny.title() + "Callback"
+            json_response = dict_response_json.get(destiny)
+            if json_response != "invalid json":
+                GenerateResponse(response_folder, response_class_name, package_name,
+                                 dict_response_json(json_response)).create_response_class()
+                GenerateCallback(callback_folder, callback_class_name, package_name).create_callback_class(response_class_name)
+                string_request += "  Call<" + response_class_name + "> " + destiny + "("
+            else:
+                print("response error in request, retrofit return a Object")
+                string_request += "  Call<Object> " + destiny + "("
             # add headers  with values to requests
             for header in json_encoded["headers"]:
                 # header not final add header to method

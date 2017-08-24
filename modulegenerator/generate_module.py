@@ -5,14 +5,14 @@ from utils import Utils
 
 class GenerateModule:
     def generate_module(self, module_name, package_name, main_folder, code_folder, values_folder, bodies_folder,
-                        module_folder):
-        self.__create_all_folders(code_folder, values_folder, bodies_folder)
+                        responses_folder, module_folder, callback_folder):
+        self.__create_all_folders(code_folder, values_folder, bodies_folder, responses_folder, callback_folder)
         self.__create_gradle(module_folder)
         self.__create_android_manifest_xml(main_folder, package_name)
         self.__create_strings_xml(values_folder, module_name)
         print("generate_module finished")
 
-    def __create_all_folders(self, code_folder, values_folder, bodies_folder):
+    def __create_all_folders(self, code_folder, values_folder, bodies_folder, responses_folder, callback_folder):
         try:
             os.makedirs(code_folder)
         except FileExistsError:
@@ -25,6 +25,14 @@ class GenerateModule:
             os.makedirs(bodies_folder)
         except FileExistsError:
             print("bodies folders exists")
+        try:
+            os.makedirs(responses_folder)
+        except FileExistsError:
+            print("responses folders exists")
+        try:
+            os.makedirs(callback_folder)
+        except FileExistsError:
+            print("callbacks folders exists")
 
     def __create_gradle(self, module_folder):
         copyfile("files" + os.sep + "gradle" + os.sep + "build.gradle", module_folder + os.sep + "build.gradle")

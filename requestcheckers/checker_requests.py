@@ -6,7 +6,7 @@ import re
 class CheckerRequests:
     # send a curl command to get responses
     def do_request(self, list_request_json, url_base):
-        list_response_json = []
+        dict_response_json = {}
         for i in list_request_json:
             json_encoded = json.loads(i.replace("\n", ""))
             # curl command with a url
@@ -42,10 +42,10 @@ class CheckerRequests:
                 string_response = response.stdout.decode("utf-8").replace("\n", "")
                 try:
                     json.loads(string_response)
-                    list_response_json.append(string_response)
+                    dict_response_json[destiny] = string_response
                 except json.JSONDecodeError:
-                    list_response_json.append("invalid json")
+                    dict_response_json[destiny] = "invalid json"
             else:
                 print("request failed")
-                list_response_json.append("invalid json")
-        return list_response_json
+                dict_response_json[destiny] = "invalid json"
+        return dict_response_json
