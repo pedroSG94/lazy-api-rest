@@ -61,7 +61,7 @@ class GenerateRetrofit2Service:
             json_response = dict_response_json.get(destiny)
             if json_response != "invalid json":
                 GenerateResponse(response_folder, response_class_name, package_name,
-                                 dict_response_json(json_response)).create_response_class()
+                                 json.loads(json_response)).create_response_class()
                 GenerateCallback(callback_folder, callback_class_name, package_name).create_callback_class(response_class_name)
                 string_request += "  Call<" + response_class_name + "> " + destiny + "("
             else:

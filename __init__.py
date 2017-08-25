@@ -23,7 +23,7 @@ def init():
     GenerateInvariableJavaFiles().copy_invariable_java_files(utility.module_name, utility.package_name,
                                                              utility.get_code_folder(), base_url, utility.get_callbacks_folder())
     GenerateLibraryAPIRest().generate_library_api_rest(utility.module_name, utility.package_name,
-                                                       utility.get_code_folder(), list_request_json)
+                                                       utility.get_code_folder(), list_request_json, dict_response_json)
     print("script finished")
 
 
