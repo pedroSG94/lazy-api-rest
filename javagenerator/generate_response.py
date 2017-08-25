@@ -64,6 +64,7 @@ class GenerateResponse:
         return string_data_response
 
     def __create_internal_object(self, name_object, json_data):
+        print("generate internal object response: " + name_object)
         json_object_encoded = json.loads(json_data.replace("\n", ""))
         response = GenerateResponse(self.response_folder, name_object, self.package_name, json_object_encoded)
         response.create_response_class()

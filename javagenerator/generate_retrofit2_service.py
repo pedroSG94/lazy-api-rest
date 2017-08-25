@@ -56,16 +56,16 @@ class GenerateRetrofit2Service:
             string_request += "})\n"
             # fix last iteration of headers
             string_request = string_request.replace(",}", "}")
-            response_class_name = destiny.title() + "Response"
             callback_class_name = destiny.title() + "Callback"
             json_response = dict_response_json.get(destiny)
             if json_response != "invalid json":
-                GenerateResponse(response_folder, response_class_name, package_name,
-                                 json.loads(json_response)).create_response_class()
+                response_class_name = destiny.title() + "Response"
+                print("generate response: " + response_class_name)
+                GenerateResponse(response_folder, response_class_name, package_name, json.loads(json_response)).create_response_class()
                 GenerateCallback(callback_folder, callback_class_name, package_name).create_callback_class(response_class_name)
                 string_request += "  Call<" + response_class_name + "> " + destiny + "("
             else:
-                print("response error in request, retrofit return a Object")
+                print("response " + destiny + " error in request, retrofit return a Object")
                 string_request += "  Call<Object> " + destiny + "("
             # add headers  with values to requests
             for header in json_encoded["headers"]:
